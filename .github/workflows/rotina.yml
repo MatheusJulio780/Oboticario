@@ -4,24 +4,22 @@ on:
   schedule:
     # Roda todos os dias às 08:00 da manhã (Horário de Brasília)
     - cron: '0 11 * * *'
-  workflow_dispatch: # Permite que você rode manualmente clicando em um botão
+  workflow_dispatch:
 
 jobs:
   verificar-vencimentos:
     runs-on: ubuntu-latest
     steps:
       - name: Baixar o código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar o Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
-      - name: Instalar pacotes
-        run: |
-          npm init -y
-          npm install firebase
+      - name: Instalar pacote do Firebase
+        run: npm install firebase
 
       - name: Rodar a varredura
         env:
