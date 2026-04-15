@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTO Management | Premium Analytics</title>
+    <title>Oboticario Gerênciamento</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -864,110 +864,133 @@
             opacity: 1;
         }
 
-        /* PDF LAYOUT Clássico */
+        /* PDF PREMIUM LAYOUT (Blindado contra Dark Mode) */
         .pdf-wrapper {
-            font-family: 'Arial', sans-serif;
-            padding: 30px;
-            color: #000;
-            background: #fff;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            padding: 40px;
+            background: #ffffff !important;
         }
+
+        .pdf-wrapper * {
+            background-color: transparent !important;
+        }
+
+        /* Limpa as transparências do dark mode */
 
         .pdf-header {
             display: flex;
             justify-content: space-between;
-            border-bottom: 3px solid #000;
+            border-bottom: 2px solid #008080;
             padding-bottom: 15px;
             margin-bottom: 25px;
-            font-weight: bold;
+        }
+
+        .pdf-header h2 {
+            margin: 0;
+            color: #008080 !important;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .pdf-header-info {
+            text-align: right;
+        }
+
+        .pdf-header-info span {
+            display: block;
+            font-size: 0.8rem;
+            color: #666 !important;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .pdf-header-info strong {
+            font-size: 1.2rem;
+            color: #000 !important;
         }
 
         .pdf-stats {
             display: flex;
-            justify-content: space-between;
-            text-align: center;
+            gap: 15px;
             margin-bottom: 25px;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #eee;
         }
 
-        .pdf-stats div {
+        .pdf-stats-box {
             flex: 1;
+            background: #f8fafc !important;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0 !important;
+            text-align: center;
         }
 
-        .pdf-stats span {
+        .pdf-stats-box span {
             display: block;
-            font-size: 0.75rem;
-            color: #555;
+            font-size: 0.7rem;
+            color: #64748b !important;
             text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 6px;
         }
 
-        .pdf-stats strong {
+        .pdf-stats-box strong {
             display: block;
             font-size: 1.2rem;
-            margin-top: 5px;
-            color: #000;
-        }
-
-        .pdf-dates {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-        }
-
-        .pdf-dates span {
-            font-size: 0.8rem;
-            color: #555;
-            display: block;
-            text-transform: uppercase;
-        }
-
-        .pdf-dates strong {
-            font-size: 1.1rem;
-            color: #000;
-        }
-
-        .pdf-alert {
-            text-align: center;
-            font-size: 1rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: #d32f2f;
+            color: #0f172a !important;
         }
 
         .pdf-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 25px;
+            background: #ffffff !important;
         }
 
         .pdf-table th {
-            border-bottom: 2px solid #000;
-            padding: 10px;
+            border-bottom: 2px solid #008080 !important;
+            padding: 12px;
             text-align: left;
-            font-size: 0.85rem;
-            color: #000;
-            background: transparent;
+            font-size: 0.75rem;
+            color: #008080 !important;
+            text-transform: uppercase;
+            font-weight: 800;
         }
 
         .pdf-table td {
-            padding: 10px;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #ddd;
-            color: #000;
+            padding: 12px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #e2e8f0 !important;
+            color: #1e293b !important;
+            background: #ffffff !important;
         }
 
         .pdf-footer {
             text-align: center;
             font-size: 0.85rem;
-            border-top: 2px dashed #000;
+            border-top: 1px dashed #cbd5e1 !important;
             padding-top: 20px;
-            margin-top: 25px;
-            color: #000;
+            color: #64748b !important;
+        }
+
+        .pdf-footer strong {
+            color: #0f172a !important;
+        }
+
+        .pdf-valor-atrasado {
+            color: #ef4444 !important;
+            font-weight: 800;
+        }
+
+        .pdf-valor-ok {
+            color: #10b981 !important;
+            font-weight: 800;
+        }
+
+        .pdf-valor-neutro {
+            color: #0f172a !important;
+            font-weight: 800;
         }
 
         #loading_pdf {
@@ -1610,49 +1633,43 @@
     <div id="modalPDF" class="modal">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: #000; font-weight: 800;">Recibo Inteligente</h3>
-                <button class="btn-action"
-                    style="background: #25D366; color: white; border-radius: 8px; border: none; box-shadow: 0 4px 10px rgba(37,211,102,0.3);"
-                    onclick="compartilharPDF()"><i class="fa-solid fa-share-nodes"></i> Compartilhar no
-                    WhatsApp</button>
+                <h3 style="color: var(--text-main); font-weight: 800;">Recibo Inteligente</h3>
+                <button class="btn-action" style="background: #25D366; color: white; border-radius: 8px; border: none; box-shadow: 0 4px 10px rgba(37,211,102,0.3);" onclick="compartilharPDF()"><i class="fa-solid fa-share-nodes"></i> Enviar WhatsApp</button>
             </div>
+            
             <div id="pdf-wrapper" class="pdf-wrapper">
                 <div class="pdf-header">
-                    <div>COD. PEDIDO<br><span id="pdf_cod_pedido" style="font-weight: normal;">000</span></div>
-                    <div style="text-align: right;">CLIENTE<br><span id="pdf_cliente"
-                            style="font-weight: normal;">Nome</span></div>
+                    <div>
+                        <h2>Recibo de Compra</h2>
+                        <span style="font-size: 0.85rem; color: #666 !important; font-weight: 600;">O Boticário</span>
+                    </div>
+                    <div class="pdf-header-info">
+                        <span>Cliente</span>
+                        <strong id="pdf_cliente">Nome</strong>
+                        <div style="font-size: 0.8rem; color: #666 !important; margin-top: 5px;">Caixa #<span id="pdf_cod_pedido">000</span></div>
+                    </div>
                 </div>
+                
                 <div class="pdf-stats">
-                    <div><span>QTD PRODUTOS</span><strong id="pdf_qtd">0</strong></div>
-                    <div><span>VALOR TOTAL</span><strong id="pdf_total">R$ 0,00</strong></div>
-                    <div><span>1ª PARCELA</span><strong id="pdf_p1" style="color: #d32f2f;">--</strong></div>
-                    <div><span>2ª PARCELA</span><strong id="pdf_p2">--</strong></div>
+                    <div class="pdf-stats-box"><span>Itens</span><strong id="pdf_qtd">0</strong></div>
+                    <div class="pdf-stats-box"><span>Valor Total</span><strong id="pdf_total">R$ 0,00</strong></div>
+                    <div class="pdf-stats-box"><span>1ª Parcela <span id="pdf_d1_min" style="display:inline; font-size:0.65rem;"></span></span><strong id="pdf_p1">--</strong></div>
+                    <div class="pdf-stats-box"><span>2ª Parcela <span id="pdf_d2_min" style="display:inline; font-size:0.65rem;"></span></span><strong id="pdf_p2">--</strong></div>
                 </div>
-                <div class="pdf-dates">
-                    <div><span>DATA 1ª PARCELA</span><strong id="pdf_d1">00/00/0000</strong></div>
-                    <div><span>DATA 2ª PARCELA</span><strong id="pdf_d2">00/00/0000</strong></div>
-                </div>
-                <div class="pdf-alert" id="pdf_alerta_vencimento">Dias para vencer...</div>
+                
+                <div id="pdf_alerta_vencimento" style="text-align: center; font-size: 0.9rem; font-weight: 800; margin-bottom: 20px;"></div>
+                
                 <table class="pdf-table">
-                    <thead>
-                        <tr>
-                            <th>COD</th>
-                            <th>ITEM</th>
-                            <th>VALOR</th>
-                            <th>COND.</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Cód</th><th>Produto</th><th>Valor</th><th>Condição</th></tr></thead>
                     <tbody id="pdf_tabela_itens"></tbody>
                 </table>
+                
                 <div class="pdf-footer">
-                    <strong>DATA DE ENTREGA: </strong><span id="pdf_data_entrega">00/00/0000</span><br><br>
-                    <span style="color: #d32f2f; font-weight: bold;">A partir da data de vencimento<br>multa de R$5.93 e
-                        juros de R$0.89 ao dia a contar da data vcto</span>
+                    <strong>Data Prev. de Entrega: </strong><span id="pdf_data_entrega">00/00/0000</span><br><br>
+                    <span style="font-size: 0.75rem;">A partir da data de vencimento poderá incidir multa e juros por atraso.</span>
                 </div>
             </div>
-            <button class="btn-action btn-outline"
-                style="width: 100%; margin-top: 25px; border-color: #000; color: #000;"
-                onclick="fecharModal('modalPDF')">Fechar Documento</button>
+            <button class="btn-action btn-outline" style="width: 100%; margin-top: 25px;" onclick="fecharModal('modalPDF')">Fechar Documento</button>
         </div>
     </div>
 
@@ -1691,50 +1708,88 @@
         // Instâncias do Chart.js
         let chartLineInst = null; let chartBarInst = null;
 
-        // --- NAVEGAÇÃO GLOBAL ---
+        // --- NAVEGAÇÃO GLOBAL & MENU MOBILE CORRIGIDO ---
         window.switchPage = (pageId) => {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // 1. Esconde todas as páginas e desmarca o menu
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none';
+            });
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(`page-${pageId}`).classList.add('active'); event.currentTarget.classList.add('active');
+            
+            // 2. Mostra a página solicitada
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                targetPage.style.display = 'block';
+            }
+            
+            // 3. Marca o botão do menu como ativo
+            const activeNav = document.querySelector(`.nav-item[onclick*="${pageId}"]`);
+            if (activeNav) activeNav.classList.add('active');
 
-            if (pageId === 'dashboard') carregarDashboardEngine();
-            if (pageId === 'produtos') carregarProdutosBase();
-            if (pageId === 'pedidos') carregarPedidosEngine();
-            if (pageId === 'vendas') carregarVendasEngine();
-            if (pageId === 'clientes') carregarClientesEngine();
-            if (pageId === 'pagamentos') carregarListaPagamentos();
+            // 4. Dispara a inteligência da página selecionada
+            if(pageId === 'dashboard') carregarDashboardEngine();
+            if(pageId === 'produtos') carregarProdutosBase();
+            if(pageId === 'pedidos') carregarPedidosEngine();
+            if(pageId === 'vendas') carregarVendasEngine();
+            if(pageId === 'clientes') carregarClientesEngine();
+            if(pageId === 'pagamentos') carregarListaPagamentos();
+
+            // 5. FECHAMENTO FORÇADO NO MOBILE (Resolve o travamento)
+            if (window.innerWidth <= 768) {
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.getElementById('menu-overlay');
+                
+                if (sidebar && sidebar.classList.contains('mobile-open')) {
+                    sidebar.classList.remove('mobile-open'); // Recolhe a aba
+                    if (overlay) overlay.classList.remove('active'); // Remove o fundo escuro
+                }
+            }
         };
 
+        // --- CONTROLE DE TEMAS SEM ANIMAÇÃO DE LÍQUIDO (INSTANTÂNEO) ---
         window.toggleLiteMode = () => {
-            const body = document.body; const isLite = body.getAttribute('data-lite') === 'true';
-            const overlay = document.getElementById('anim-overlay');
-            document.getElementById('anim-sun').style.display = 'none'; document.getElementById('anim-moon').style.display = 'none';
-            overlay.style.display = 'flex';
-            setTimeout(() => {
-                overlay.style.opacity = '1';
-                if (isLite) { document.querySelector('.anim-container').className = 'anim-container anim-lite-grow'; setTimeout(() => { body.setAttribute('data-lite', 'false'); }, 1000); }
-                else { document.querySelector('.anim-container').className = 'anim-container anim-lite-shrink'; setTimeout(() => { body.setAttribute('data-lite', 'true'); }, 1000); }
-                setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 400); }, 1800);
-            }, 50);
+            const body = document.body; 
+            const isLite = body.getAttribute('data-lite') === 'true';
+            body.setAttribute('data-lite', !isLite); // Troca instantânea
+        };
+        
+        window.toggleTheme = () => {
+            const html = document.documentElement; 
+            const isLight = html.getAttribute('data-theme') === 'light';
+            const icon = document.querySelector('.theme-toggle i.fa-moon, .theme-toggle i.fa-sun');
+            
+            // Troca de cor imediata, sem telas de carregamento
+            if(isLight) { 
+                html.setAttribute('data-theme', 'dark'); 
+                if(icon) icon.className = 'fa-solid fa-sun'; 
+            } else { 
+                html.setAttribute('data-theme', 'light'); 
+                if(icon) icon.className = 'fa-solid fa-moon'; 
+            }
+            
+            // Atualiza as cores dos gráficos se estiver no Dashboard
+            if(document.getElementById('page-dashboard').classList.contains('active')) {
+                carregarDashboardEngine();
+            }
         };
 
-        window.toggleTheme = () => {
-            const html = document.documentElement; const isLight = html.getAttribute('data-theme') === 'light';
-            const icon = document.querySelector('.theme-toggle i.fa-moon, .theme-toggle i.fa-sun');
-            const overlay = document.getElementById('anim-overlay');
-            document.getElementById('anim-sun').style.display = 'block'; document.getElementById('anim-moon').style.display = 'block';
-            document.querySelector('.anim-container').className = 'anim-container'; overlay.style.display = 'flex';
-            setTimeout(() => {
-                overlay.style.opacity = '1'; overlay.style.background = isLight ? '#060909' : '#f0f4f4';
-                if (isLight) { document.querySelector('.anim-container').classList.add('anim-show-moon'); setTimeout(() => { html.setAttribute('data-theme', 'dark'); if (icon) icon.className = 'fa-solid fa-sun'; }, 800); }
-                else { document.querySelector('.anim-container').classList.add('anim-show-sun'); setTimeout(() => { html.setAttribute('data-theme', 'light'); if (icon) icon.className = 'fa-solid fa-moon'; }, 800); }
-                setTimeout(() => {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => { overlay.style.display = 'none'; overlay.style.background = 'var(--bg-body)'; }, 400);
-                    // Atualiza cores dos gráficos após mudança de tema
-                    if (document.getElementById('page-dashboard').classList.contains('active')) carregarDashboardEngine();
-                }, 1800);
-            }, 50);
+        // --- GERENCIADOR DO BOTÃO HAMBÚRGUER (MOBILE) ---
+        window.toggleMobileMenu = () => {
+            const sidebar = document.querySelector('.sidebar');
+            let overlay = document.getElementById('menu-overlay');
+            
+            // Cria o fundo escuro na primeira vez que abre
+            if(!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'menu-overlay';
+                overlay.onclick = window.toggleMobileMenu;
+                document.body.appendChild(overlay);
+            }
+            
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
         };
 
         // --- SISTEMA DE DATAS ---
@@ -1765,147 +1820,190 @@
             return { pSnap, vSnap, pgSnap };
         }
 
-        // --- DASHBOARD ENGINE ---
+        // --- DASHBOARD ENGINE & NTFY NOTIFICAÇÕES ---
         async function carregarDashboardEngine() {
             const data = await fetchGlobalData();
-            const filtroMes = document.getElementById('dash_filtro_mes').value; // "all" ou "01"-"12"
-            const anoAtual = new Date().getFullYear();
-
-            // Se for a primeira carga, define o mês atual no select
+            const filtroMes = document.getElementById('dash_filtro_mes').value; 
+            
             if (filtroMes === "" || !document.getElementById('dash_filtro_mes').dataset.setted) {
                 const mesHoje = String(new Date().getMonth() + 1).padStart(2, '0');
                 document.getElementById('dash_filtro_mes').value = mesHoje;
                 document.getElementById('dash_filtro_mes').dataset.setted = "true";
-                return carregarDashboardEngine(); // Recarrega com o valor certo
+                return carregarDashboardEngine(); 
             }
 
             let totalRevenda = 0, totalCusto = 0, totalPago = 0;
-            let rankingProdutos = {}; let comprasPorCliente = {};
-            let vendasPorDia = {};
+            let rankingProdutos = {}; let comprasPorCliente = {}; let vendasPorDia = {};
+            const mapClientes = {};
 
-            // Processa Pagamentos (Sempre global para o cálculo de "A Receber")
             data.pgSnap.forEach(d => { totalPago += parseFloat(d.data().valor_pago) || 0; });
 
-            // Processa Vendas
-            const mapClientes = {};
             data.vSnap.forEach(d => {
-                const v = d.data();
-                const valVenda = parseFloat(v.valor_venda) || 0;
-                const valCusto = parseFloat(v.valor_real) || 0;
-                const dataVenc = v.venc_cliente; // Formato YYYY-MM-DD
+                const v = d.data(); const valVenda = parseFloat(v.valor_venda) || 0; const valCusto = parseFloat(v.valor_real) || 0;
+                if(!v.venc_cliente) return;
+                const [ano, mes, dia] = v.venc_cliente.split('-');
 
-                if (!dataVenc) return;
-                const [ano, mes, dia] = dataVenc.split('-');
-
-                // APLICA FILTRO
                 if (filtroMes !== "all" && mes !== filtroMes) return;
 
-                totalRevenda += valVenda;
-                totalCusto += valCusto;
-
-                // Gráfico Diário (Eixo X será o dia)
+                totalRevenda += valVenda; totalCusto += valCusto;
                 const labelDia = filtroMes === "all" ? `${dia}/${mes}` : dia;
-                if (!vendasPorDia[labelDia]) vendasPorDia[labelDia] = 0;
-                vendasPorDia[labelDia] += valVenda;
+                if(!vendasPorDia[labelDia]) vendasPorDia[labelDia] = 0; vendasPorDia[labelDia] += valVenda;
 
-                // Top Clientes
-                if (!comprasPorCliente[v.cliente]) comprasPorCliente[v.cliente] = 0;
-                comprasPorCliente[v.cliente] += valVenda;
+                if(!comprasPorCliente[v.cliente]) comprasPorCliente[v.cliente] = 0; comprasPorCliente[v.cliente] += valVenda;
 
-                // Ranking Produtos
                 let prodName = v.nome_item || "Desconhecido";
-                if (!rankingProdutos[prodName]) rankingProdutos[prodName] = { qtd: 0 };
-                rankingProdutos[prodName].qtd += 1;
+                if(!rankingProdutos[prodName]) rankingProdutos[prodName] = { qtd: 0 }; rankingProdutos[prodName].qtd += 1;
 
-                // Radar de Cobrança
-                if (!mapClientes[v.cliente]) mapClientes[v.cliente] = { sacolas: {} };
-                if (!mapClientes[v.cliente].sacolas[v.cod_pedido]) mapClientes[v.cliente].sacolas[v.cod_pedido] = { total: 0, req_p1: 0, req_p2: 0, parcelas: v.parcelas || 2, venc_base: v.venc_cliente };
+                if(!mapClientes[v.cliente]) mapClientes[v.cliente] = { sacolas: {} };
+                if(!mapClientes[v.cliente].sacolas[v.cod_pedido]) mapClientes[v.cliente].sacolas[v.cod_pedido] = { total: 0, req_p1: 0, req_p2: 0, parcelas: v.parcelas||2, venc_base: v.venc_cliente };
                 let parc = v.parcelas || 2;
                 mapClientes[v.cliente].sacolas[v.cod_pedido].total += valVenda;
-                mapClientes[v.cliente].sacolas[v.cod_pedido].req_p1 += (parc > 1 ? valVenda / parc : valVenda);
-                mapClientes[v.cliente].sacolas[v.cod_pedido].req_p2 += (parc > 1 ? valVenda / parc : 0);
+                mapClientes[v.cliente].sacolas[v.cod_pedido].req_p1 += (parc > 1 ? valVenda/parc : valVenda);
+                mapClientes[v.cliente].sacolas[v.cod_pedido].req_p2 += (parc > 1 ? valVenda/parc : 0);
             });
 
-            // Atualiza Cards
             document.getElementById('dash_faturamento').innerText = `R$ ${totalRevenda.toFixed(2)}`;
-            document.getElementById('dash_lucro').innerText = `R$ ${(totalRevenda - totalCusto).toFixed(2)}`;
-            document.getElementById('dash_receber').innerText = `R$ ${(totalRevenda - totalPago > 0 ? totalRevenda - totalPago : 0).toFixed(2)}`;
+            document.getElementById('dash_lucro').innerText = `R$ ${ (totalRevenda - totalCusto).toFixed(2) }`;
+            document.getElementById('dash_receber').innerText = `R$ ${ (totalRevenda - totalPago > 0 ? totalRevenda - totalPago : 0).toFixed(2) }`;
 
-            // Radar de Cobrança (Usa os pagamentos reais para abater)
             data.pgSnap.forEach(d => {
                 const pg = d.data();
-                if (mapClientes[pg.cliente] && mapClientes[pg.cliente].sacolas[pg.cod_pedido]) {
+                if(mapClientes[pg.cliente] && mapClientes[pg.cliente].sacolas[pg.cod_pedido]) {
                     const s = mapClientes[pg.cliente].sacolas[pg.cod_pedido];
-                    if (pg.parcela === 1) s.pago_p1 = (s.pago_p1 || 0) + pg.valor_pago;
-                    if (pg.parcela === 2) s.pago_p2 = (s.pago_p2 || 0) + pg.valor_pago;
+                    if(pg.parcela === 1) s.pago_p1 = (s.pago_p1 || 0) + pg.valor_pago;
+                    if(pg.parcela === 2) s.pago_p2 = (s.pago_p2 || 0) + pg.valor_pago;
                 }
             });
 
-            // Renderizar Alertas (Radar)
-            const htmlAlertas = document.getElementById('dash_lista_cobranca');
-            htmlAlertas.innerHTML = '';
+            const htmlAlertas = document.getElementById('dash_lista_cobranca'); htmlAlertas.innerHTML = '';
             let listaAlertas = [];
-            for (const c in mapClientes) {
-                for (const cod in mapClientes[c].sacolas) {
+            for(const c in mapClientes) {
+                for(const cod in mapClientes[c].sacolas) {
                     const s = mapClientes[c].sacolas[cod];
                     const p1_ok = (s.pago_p1 || 0) >= (s.req_p1 - 0.1);
                     const p2_ok = (s.pago_p2 || 0) >= (s.req_p2 - 0.1) || s.parcelas === 1;
-                    if (!p1_ok || !p2_ok) {
+                    if(!p1_ok || !p2_ok) {
                         let tDate = p1_ok ? somar30Dias(s.venc_base) : s.venc_base;
-                        listaAlertas.push({ cliente: c, val: p1_ok ? s.req_p2 : s.req_p1, ...calcularDias(tDate) });
+                        listaAlertas.push({ cliente: c, parcela: p1_ok ? '2ª' : '1ª', val: p1_ok ? s.req_p2 : s.req_p1, ...calcularDias(tDate) });
                     }
                 }
             }
-            listaAlertas.sort((a, b) => a.dias - b.dias).slice(0, 6).forEach(a => {
-                htmlAlertas.innerHTML += `<div class="alert-item" style="padding: 8px 0;"><div class="alert-info"><span class="alert-name" style="font-size:0.8rem;">${a.cliente}</span><span style="font-size:0.7rem; color:${a.atrasado ? 'var(--danger)' : 'var(--warning)'}">${a.texto}</span></div><strong style="font-size:0.8rem;">R$ ${a.val.toFixed(2)}</strong></div>`;
+            
+            listaAlertas.sort((a,b) => a.dias - b.dias).slice(0, 6).forEach(a => {
+                htmlAlertas.innerHTML += `<div class="alert-item" style="padding: 8px 0;"><div class="alert-info"><span class="alert-name" style="font-size:0.8rem;">${a.cliente}</span><span style="font-size:0.7rem; color:${a.atrasado ? 'var(--danger)':'var(--warning)'}">${a.texto}</span></div><strong style="font-size:0.8rem;">R$ ${a.val.toFixed(2)}</strong></div>`;
             });
 
-            // Renderizar Gráficos
+            // 🚀 MOTOR DO NTFY - AVISO NO IPHONE
+            const hojeStr = new Date().toISOString().split('T')[0];
+            // Dispara apenas 1 vez por dia para não floodar seu celular
+            if(localStorage.getItem('ntfy_last_run') !== hojeStr && listaAlertas.length > 0) {
+                const topicoNTFY = "bto_cob_matheus"; // <- IMPORTANTE: ESSE É O NOME DO TÓPICO NO APP DO SEU IPHONE
+                const appUrl = window.location.href;
+                
+                listaAlertas.forEach(a => {
+                    // Notifica clientes que estão devendo e faltam exatos 5 dias ou menos (sem estarem atrasados ainda)
+                    if(!a.atrasado && a.dias <= 5 && a.dias >= 0) {
+                        fetch(`https://ntfy.sh/${topicoNTFY}`, {
+                            method: 'POST',
+                            body: `A ${a.parcela} parcela de ${a.cliente} (R$ ${a.val.toFixed(2)}) vence em ${a.dias === 0 ? 'HOJE!' : a.dias + ' dias'}.`,
+                            headers: { 'Title': 'Cobrança Próxima 💰', 'Tags': 'warning,money_with_wings', 'Click': appUrl }
+                        }).catch(e => console.log("Erro no ntfy", e));
+                    }
+                });
+                localStorage.setItem('ntfy_last_run', hojeStr);
+            }
+
+            // Gráficos (Chart.js)
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (chartLineInst) chartLineInst.destroy();
-            if (chartBarInst) chartBarInst.destroy();
+            if(chartLineInst) chartLineInst.destroy(); if(chartBarInst) chartBarInst.destroy();
 
-            // Gráfico de Linha Diário
-            let labelsDias = Object.keys(vendasPorDia).sort((a, b) => parseInt(a) - parseInt(b));
+            let labelsDias = Object.keys(vendasPorDia).sort((a,b) => parseInt(a) - parseInt(b));
             chartLineInst = new Chart(document.getElementById('chartFaturamento'), {
-                type: 'line',
-                data: {
-                    labels: labelsDias,
-                    datasets: [{
-                        data: labelsDias.map(l => vendasPorDia[l]),
-                        borderColor: '#2eb8b8',
-                        backgroundColor: 'rgba(46, 184, 184, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 2
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { color: isDark ? '#1a2424' : '#eee' } }, x: { grid: { display: false } } }
-                }
+                type: 'line', data: { labels: labelsDias, datasets: [{ data: labelsDias.map(l => vendasPorDia[l]), borderColor: '#2eb8b8', backgroundColor: 'rgba(46, 184, 184, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 2 }] },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: isDark ? '#1a2424' : '#eee' } }, x: { grid: { display: false } } } }
             });
 
-            // Gráfico Top Clientes
-            let topCli = Object.keys(comprasPorCliente).map(k => ({ n: k, v: comprasPorCliente[k] })).sort((a, b) => b.v - a.v).slice(0, 5);
+            let topCli = Object.keys(comprasPorCliente).map(k => ({n: k, v: comprasPorCliente[k]})).sort((a,b) => b.v - a.v).slice(0, 5);
             chartBarInst = new Chart(document.getElementById('chartTopClientes'), {
-                type: 'bar',
-                data: {
-                    labels: topCli.map(c => c.n.split(' ')[0]),
-                    datasets: [{ data: topCli.map(c => c.v), backgroundColor: '#2eb8b8' }]
-                },
+                type: 'bar', data: { labels: topCli.map(c => c.n.split(' ')[0]), datasets: [{ data: topCli.map(c => c.v), backgroundColor: '#2eb8b8' }] },
                 options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Ranking Produtos (Lista)
-            const htmlProd = document.getElementById('dash_lista_produtos');
-            htmlProd.innerHTML = '';
-            Object.keys(rankingProdutos).map(k => ({ n: k, q: rankingProdutos[k].qtd })).sort((a, b) => b.q - a.q).slice(0, 4).forEach((p, i) => {
-                htmlProd.innerHTML += `<tr><td style="padding:5px 0;">${i + 1}. ${p.n.substring(0, 20)}</td><td style="text-align:right;">${p.q}</td></tr>`;
+            const htmlProd = document.getElementById('dash_lista_produtos'); htmlProd.innerHTML = '';
+            Object.keys(rankingProdutos).map(k => ({n: k, q: rankingProdutos[k].qtd})).sort((a,b) => b.q - a.q).slice(0, 4).forEach((p, i) => {
+                htmlProd.innerHTML += `<tr><td style="padding:5px 0;">${i+1}. ${p.n.substring(0,20)}</td><td style="text-align:right; font-weight:800; color:var(--primary-light);">${p.q}</td></tr>`;
             });
         }
+
+        // --- PDF ENGINE ---
+        window.gerarPDF = async (codPedido, cliente) => {
+            const data = await fetchGlobalData();
+            let pedido = null; data.pSnap.forEach(d => { if(d.id === codPedido) pedido = d.data(); });
+            
+            let total = 0, parcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
+            data.vSnap.forEach(d => {
+                const v = d.data(); 
+                if(v.cod_pedido === codPedido && v.cliente === cliente) {
+                    qtd++; const val = parseFloat(v.valor_venda) || 0; total += val; parcelas = v.parcelas || 2; venc1 = v.venc_cliente; 
+                    const valCondicao = parcelas > 1 ? `R$ ${(val/parcelas).toFixed(2)}` : 'À Vista'; 
+                    const strParcela = parcelas > 1 ? `${parcelas}X` : '1X';
+                    htmlTable += `<tr><td>${v.cod_produto}</td><td>${v.nome_item}</td><td><strong>R$ ${val.toFixed(2)}</strong></td><td>${strParcela} (${valCondicao})</td></tr>`;
+                }
+            });
+
+            let pago_p1 = 0, pago_p2 = 0;
+            data.pgSnap.forEach(d => { 
+                const pg = d.data(); 
+                if(pg.cod_pedido === codPedido && pg.cliente === cliente) { 
+                    if(pg.parcela === 1) pago_p1 += parseFloat(pg.valor_pago); 
+                    if(pg.parcela === 2) pago_p2 += parseFloat(pg.valor_pago); 
+                } 
+            });
+
+            const valBaseParcela1 = parcelas > 1 ? (total / parcelas) : total; 
+            const valBaseParcela2 = parcelas > 1 ? (total / parcelas) : 0;
+            const venc2 = parcelas > 1 ? somar30Dias(venc1) : null;
+            
+            const statusVenc = calcularDias(venc1); const statusVenc2 = calcularDias(venc2);
+            
+            // Lógica Inteligente de Cores: Só fica vermelho se estiver ATRASADO
+            let classP1 = 'pdf-valor-neutro'; let classP2 = 'pdf-valor-neutro';
+            if(pago_p1 >= (valBaseParcela1 - 0.05)) { classP1 = 'pdf-valor-ok'; } else if(statusVenc.atrasado) { classP1 = 'pdf-valor-atrasado'; }
+            if(parcelas > 1) {
+                if(pago_p2 >= (valBaseParcela2 - 0.05)) { classP2 = 'pdf-valor-ok'; } else if(statusVenc2.atrasado) { classP2 = 'pdf-valor-atrasado'; }
+            }
+
+            const txtP1 = pago_p1 >= (valBaseParcela1 - 0.05) ? 'PAGO ✓' : `R$ ${(valBaseParcela1 - pago_p1).toFixed(2)}`;
+            const txtP2 = parcelas > 1 ? (pago_p2 >= (valBaseParcela2 - 0.05) ? 'PAGO ✓' : `R$ ${(valBaseParcela2 - pago_p2).toFixed(2)}`) : '--';
+
+            let txtAlerta = ''; let classeAlerta = '';
+            if (parcelas > 1 && pago_p1 >= (valBaseParcela1 - 0.05) && pago_p2 < (valBaseParcela2 - 0.05)) {
+                txtAlerta = statusVenc2.atrasado ? `⚠️ ATENÇÃO: 2ª parcela com ${Math.abs(statusVenc2.dias)} dias de atraso` : `${statusVenc2.texto} a 2ª parcela`;
+                classeAlerta = statusVenc2.atrasado ? 'pdf-valor-atrasado' : 'pdf-valor-neutro';
+            } else if (pago_p1 < (valBaseParcela1 - 0.05)) {
+                txtAlerta = statusVenc.atrasado ? `⚠️ ATENÇÃO: 1ª parcela com ${Math.abs(statusVenc.dias)} dias de atraso` : `${statusVenc.texto} a 1ª parcela`;
+                classeAlerta = statusVenc.atrasado ? 'pdf-valor-atrasado' : 'pdf-valor-neutro';
+            }
+
+            document.getElementById('pdf_cod_pedido').innerText = codPedido; 
+            document.getElementById('pdf_cliente').innerText = cliente;
+            document.getElementById('pdf_qtd').innerText = qtd; 
+            document.getElementById('pdf_total').innerText = `R$ ${total.toFixed(2)}`;
+            
+            const elP1 = document.getElementById('pdf_p1'); elP1.innerText = txtP1; elP1.className = classP1;
+            const elP2 = document.getElementById('pdf_p2'); elP2.innerText = txtP2; elP2.className = classP2;
+            
+            document.getElementById('pdf_d1_min').innerText = formatarDataBR(venc1).substring(0,5); 
+            document.getElementById('pdf_d2_min').innerText = parcelas > 1 ? formatarDataBR(venc2).substring(0,5) : '--';
+            
+            const elAlerta = document.getElementById('pdf_alerta_vencimento');
+            elAlerta.innerText = txtAlerta; elAlerta.className = classeAlerta;
+            
+            document.getElementById('pdf_data_entrega').innerText = pedido ? formatarDataBR(pedido.data_entrega) : '--';
+            document.getElementById('pdf_tabela_itens').innerHTML = htmlTable;
+            
+            abrirModal('modalPDF');
+        };
 
 
         // --- SISTEMA DE PAGAMENTOS ---
