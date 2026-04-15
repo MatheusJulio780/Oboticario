@@ -25,12 +25,12 @@
         }
 
         [data-theme="light"] {
-            --bg-body: #f4f7f7;
+            --bg-body: #dadada59;
             --bg-card: #ffffff;
             --text-main: #1a1a1a;
             --text-muted: #666;
             --border: #d1dbdb;
-            --shadow: 0 12px 35px rgba(0, 128, 128, 0.08);
+            --shadow: 13px 12px 35px rgba(76, 83, 83, 0.11);
             --surface: #e8eeee;
             --hover-bg: rgba(0, 128, 128, 0.05);
         }
@@ -41,7 +41,7 @@
             --text-main: #e8eeee;
             --text-muted: #8a9999;
             --border: #1a2424;
-            --shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            --shadow: 13px 15px 20px rgba(15, 37, 36, 0.6);
             --surface: #181d1d;
             --hover-bg: rgba(0, 128, 128, 0.1);
         }
@@ -279,6 +279,7 @@
         /* Cards Premium UI */
         .cards-grid {
             display: grid;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
         }
@@ -297,6 +298,7 @@
 
         .card-box.interactive {
             cursor: pointer;
+            box-shadow: 15px 15px 15px #8585855e;
         }
 
         .card-box.interactive:hover {
@@ -700,99 +702,7 @@
             align-items: center;
             justify-content: center;
         }
-
-        .perfume-bottle {
-            position: absolute;
-            z-index: 10;
-            width: 120px;
-            height: 140px;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
-            border-radius: 20px 20px 10px 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 128, 128, 0.4);
-            transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .perfume-bottle::before {
-            content: '';
-            position: absolute;
-            top: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 35px;
-            background: linear-gradient(90deg, #ffd700, #b8860b);
-            border-radius: 8px 8px 4px 4px;
-            border: 1px solid #da9100;
-        }
-
-        .perfume-bottle::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            width: 15px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            filter: blur(2px);
-        }
-
-        .celestial {
-            position: absolute;
-            z-index: 5;
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-        }
-
-        .sun-shape {
-            background: radial-gradient(circle, #fff3a0 0%, #ff8c00 100%);
-            box-shadow: 0 0 60px #ff8c00;
-            transform: translateY(120px) scale(0.5);
-        }
-
-        .moon-shape {
-            background: transparent;
-            box-shadow: inset -20px -20px 0 #e0e6e6;
-            transform: translateY(120px) scale(0.5);
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
-        }
-
-        .anim-show-sun .sun-shape {
-            transform: translateY(-110px) translateX(40px) scale(1);
-            opacity: 1;
-        }
-
-        .anim-show-sun .moon-shape {
-            transform: translateY(120px) scale(0.5);
-            opacity: 0;
-        }
-
-        .anim-show-moon .moon-shape {
-            transform: translateY(-110px) translateX(40px) scale(1);
-            opacity: 1;
-        }
-
-        .anim-show-moon .sun-shape {
-            transform: translateY(120px) scale(0.5);
-            opacity: 0;
-        }
-
-        .anim-lite-shrink .perfume-bottle {
-            transform: scale(0.3) translateY(200px);
-            filter: grayscale(1);
-            opacity: 0.5;
-        }
-
-        .anim-lite-grow .perfume-bottle {
-            transform: scale(1.1) translateY(0);
-            filter: grayscale(0);
-            opacity: 1;
-        }
-
+        
         /* PDF PREMIUM LAYOUT (Blindado contra Dark Mode) */
         .pdf-wrapper {
             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
@@ -960,79 +870,51 @@
 
         /* Ajustes para Celulares (Telas menores que 768px) */
         @media (max-width: 768px) {
-            #mobile-menu-btn {
-                display: block;
-            }
+            #mobile-menu-btn { display: block; }
 
+            /* Joga a barra totalmente para fora da tela, já expandida */
             nav.sidebar {
-                width: 0;
-                /* Esconde a barra */
-                left: -80px;
-                transition: 0.3s;
-            }
-
-            /* Quando o menu estiver aberto no mobile */
-            nav.sidebar.mobile-open {
-                width: 250px;
-                left: 0;
+                width: 260px !important; 
+                left: -320px;
                 align-items: flex-start;
                 padding-left: 20px;
+                box-shadow: none;
             }
 
-            nav.sidebar.mobile-open .nav-item span,
-            nav.sidebar.mobile-open .theme-toggle span {
-                display: block;
+            /* Desliza a barra para dentro */
+            nav.sidebar.mobile-open {
+                left: 15px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             }
 
-            nav.sidebar.mobile-open .nav-item {
-                justify-content: flex-start;
-                padding-left: 15px;
-            }
+            /* Força a exibição dos textos, ignorando o comportamento de hover do PC */
+            nav.sidebar span, .brand-logo span { display: block !important; }
+            .brand-logo { width: calc(100% - 20px) !important; justify-content: flex-start !important; padding-left: 15px !important; }
+            .nav-item { justify-content: flex-start !important; padding-left: 15px !important; margin-left: 0 !important; width: calc(100% - 20px) !important; }
+            .sys-toggles { align-items: flex-start !important; padding: 0 !important; width: calc(100% - 20px) !important; }
+            .theme-toggle { justify-content: flex-start !important; padding-left: 15px !important; }
 
+            /* Ajuste do Main Container */
             main.container {
                 margin-left: 0;
-                padding: 80px 15px 20px 15px;
-                /* Espaço para o botão do topo */
+                padding: 80px 15px 20px 15px; /* Espaço para o botão hambúrguer */
                 width: 100%;
             }
 
-            /* Dashboard Compacto para Celular */
-            .dash-grid-top {
-                grid-template-columns: 1fr;
-            }
+            /* Anula o "blur" de fundo do hover do PC quando tocado no celular */
+            nav.sidebar:hover ~ main.container { opacity: 1; filter: none; transform: none; pointer-events: auto; }
 
-            .dash-grid-main {
-                grid-template-columns: 1fr !important;
-            }
+            /* Dashboard Compacto */
+            .dash-grid-top { grid-template-columns: 1fr; }
+            .dash-grid-main { grid-template-columns: 1fr !important; }
+            .dash-metric-value { font-size: 1.5rem !important; }
+            .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .cards-grid { grid-template-columns: 1fr; }
 
-            .dash-metric-value {
-                font-size: 1.5rem !important;
-            }
-
-            .header-flex {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-
-            /* Cards em coluna única no celular */
-
-            /* Overlay para fechar o menu ao clicar fora */
             #menu-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 45;
+                display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 45; backdrop-filter: blur(3px);
             }
-
-            #menu-overlay.active {
-                display: block;
-            }
+            #menu-overlay.active { display: block; }
         }
     </style>
 
@@ -1058,15 +940,15 @@
     <nav class="sidebar">
         <div class="brand-logo">
             <i class="fa-solid fa-spray-can-sparkles"></i>
-            <span>OMJ</span>
+            <span>Oboticário</span>
         </div>
 
-        <div class="nav-item active" onclick="switchPage('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Painel Estratégico</span></div>
-        <div class="nav-item" onclick="switchPage('pedidos')"><i class="fa-solid fa-box-open"></i><span>Caixas Fechadas</span></div>
-        <div class="nav-item" onclick="switchPage('vendas')"><i class="fa-solid fa-users-viewfinder"></i><span>Sacolas & Vendas</span></div>
-        <div class="nav-item" onclick="switchPage('clientes')"><i class="fa-solid fa-address-book"></i><span>Meus Clientes</span></div>
-        <div class="nav-item" onclick="switchPage('pagamentos')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Recebimentos</span></div>
-        <div class="nav-item" onclick="switchPage('produtos')"><i class="fa-solid fa-tags"></i><span>Base de Produtos</span></div>
+        <div class="nav-item active" onclick="switchPage('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></div>
+        <div class="nav-item" onclick="switchPage('pedidos')"><i class="fa-solid fa-box-open"></i><span>Pedidos</span></div>
+        <div class="nav-item" onclick="switchPage('vendas')"><i class="fa-solid fa-users-viewfinder"></i><span>Vendas</span></div>
+        <div class="nav-item" onclick="switchPage('clientes')"><i class="fa-solid fa-address-book"></i><span>Clientes</span></div>
+        <div class="nav-item" onclick="switchPage('pagamentos')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Recebimentos Clientes</span></div>
+        <div class="nav-item" onclick="switchPage('produtos')"><i class="fa-solid fa-tags"></i><span>Produtos</span></div>
         
         <div class="sys-toggles">
             <button class="theme-toggle" onclick="toggleLiteMode()"><i class="fa-solid fa-bolt"></i><span>Modo Desempenho</span></button>
@@ -1079,7 +961,7 @@
         <section id="page-dashboard" class="page active">
             <div class="header-flex" style="margin-bottom: 20px;">
                 <div>
-                    <h2 style="font-size: 1.4rem;">Painel Estratégico</h2>
+                    <h2 style="font-size: 1.4rem;">Dashboard</h2>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <label style="margin:0; font-size: 0.7rem;">Período:</label>
@@ -1156,7 +1038,7 @@
         <section id="page-pedidos" class="page">
             <div class="header-flex">
                 <div>
-                    <h2>Caixas O Boticário</h2>
+                    <h2>Pedidos</h2>
                     <p style="color: var(--text-muted); font-size: 0.95rem;">Caixas ordenadas automaticamente pelo
                         vencimento crítico.</p>
                 </div>
@@ -1169,7 +1051,7 @@
         <section id="page-vendas" class="page">
             <div class="header-flex" style="flex-wrap: wrap; gap: 15px;">
                 <div>
-                    <h2>Vendas Registradas</h2>
+                    <h2>Vendas</h2>
                     <p style="color: var(--text-muted); font-size: 0.95rem;">Sacolas agrupadas por cliente e número do
                         pedido.</p>
                 </div>
@@ -1186,7 +1068,7 @@
         <section id="page-clientes" class="page">
             <div class="header-flex">
                 <div>
-                    <h2>Diretório de Clientes</h2>
+                    <h2>Clientes</h2>
                     <p style="color: var(--text-muted); font-size: 0.95rem;">Visão global de gastos e pendências
                         financeiras.</p>
                 </div>
@@ -1264,7 +1146,7 @@
                         id="m_frete" step="0.01" value="0"></div>
                 <div class="form-group"><label>Data de Chegada (Entrega)</label><input type="date" id="m_data_entrega">
                 </div>
-                <div class="form-group"><label>Vencimento 1ª Parcela (O Boticário)</label><input type="date"
+                <div class="form-group"><label>Vencimento 1ª Parcela (O Oboticário)</label><input type="date"
                         id="m_venc_boticario"></div>
             </div>
 
@@ -2091,7 +1973,7 @@
                         <div class="card-header">
                             <div style="overflow: hidden;">
                                 <span class="card-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><i class="fa-solid fa-box-open" style="color:var(--primary-light);"></i> #${b.cod}</span>
-                                <div class="card-subtitle">Caixa Boticário</div>
+                                <div class="card-subtitle">Caixa Oboticário</div>
                             </div>
                             <span class="badge ${classBadge}" style="white-space: nowrap;">${b.targetParcStr}</span>
                         </div>
