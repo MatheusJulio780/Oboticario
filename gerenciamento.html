@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oboticario Gerênciamento</title>
+    <title>Oboticario Matheus | Gerenciamento</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1666,7 +1666,7 @@
                 
                 <div class="pdf-footer">
                     <strong>Data Prev. de Entrega: </strong><span id="pdf_data_entrega">00/00/0000</span><br><br>
-                    <span style="font-size: 0.75rem;">A partir da data de vencimento poderá incidir multa e juros por atraso.</span>
+                    <span style="font-size: 0.75rem;">A partir da data de vencimento multa de R$5.93 e juros de R$0.89 ao dia a contar da data de vencimento</span>
                 </div>
             </div>
             <button class="btn-action btn-outline" style="width: 100%; margin-top: 25px;" onclick="fecharModal('modalPDF')">Fechar Documento</button>
@@ -1934,77 +1934,6 @@
                 htmlProd.innerHTML += `<tr><td style="padding:5px 0;">${i+1}. ${p.n.substring(0,20)}</td><td style="text-align:right; font-weight:800; color:var(--primary-light);">${p.q}</td></tr>`;
             });
         }
-
-        // --- PDF ENGINE ---
-        window.gerarPDF = async (codPedido, cliente) => {
-            const data = await fetchGlobalData();
-            let pedido = null; data.pSnap.forEach(d => { if(d.id === codPedido) pedido = d.data(); });
-            
-            let total = 0, parcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
-            data.vSnap.forEach(d => {
-                const v = d.data(); 
-                if(v.cod_pedido === codPedido && v.cliente === cliente) {
-                    qtd++; const val = parseFloat(v.valor_venda) || 0; total += val; parcelas = v.parcelas || 2; venc1 = v.venc_cliente; 
-                    const valCondicao = parcelas > 1 ? `R$ ${(val/parcelas).toFixed(2)}` : 'À Vista'; 
-                    const strParcela = parcelas > 1 ? `${parcelas}X` : '1X';
-                    htmlTable += `<tr><td>${v.cod_produto}</td><td>${v.nome_item}</td><td><strong>R$ ${val.toFixed(2)}</strong></td><td>${strParcela} (${valCondicao})</td></tr>`;
-                }
-            });
-
-            let pago_p1 = 0, pago_p2 = 0;
-            data.pgSnap.forEach(d => { 
-                const pg = d.data(); 
-                if(pg.cod_pedido === codPedido && pg.cliente === cliente) { 
-                    if(pg.parcela === 1) pago_p1 += parseFloat(pg.valor_pago); 
-                    if(pg.parcela === 2) pago_p2 += parseFloat(pg.valor_pago); 
-                } 
-            });
-
-            const valBaseParcela1 = parcelas > 1 ? (total / parcelas) : total; 
-            const valBaseParcela2 = parcelas > 1 ? (total / parcelas) : 0;
-            const venc2 = parcelas > 1 ? somar30Dias(venc1) : null;
-            
-            const statusVenc = calcularDias(venc1); const statusVenc2 = calcularDias(venc2);
-            
-            // Lógica Inteligente de Cores: Só fica vermelho se estiver ATRASADO
-            let classP1 = 'pdf-valor-neutro'; let classP2 = 'pdf-valor-neutro';
-            if(pago_p1 >= (valBaseParcela1 - 0.05)) { classP1 = 'pdf-valor-ok'; } else if(statusVenc.atrasado) { classP1 = 'pdf-valor-atrasado'; }
-            if(parcelas > 1) {
-                if(pago_p2 >= (valBaseParcela2 - 0.05)) { classP2 = 'pdf-valor-ok'; } else if(statusVenc2.atrasado) { classP2 = 'pdf-valor-atrasado'; }
-            }
-
-            const txtP1 = pago_p1 >= (valBaseParcela1 - 0.05) ? 'PAGO ✓' : `R$ ${(valBaseParcela1 - pago_p1).toFixed(2)}`;
-            const txtP2 = parcelas > 1 ? (pago_p2 >= (valBaseParcela2 - 0.05) ? 'PAGO ✓' : `R$ ${(valBaseParcela2 - pago_p2).toFixed(2)}`) : '--';
-
-            let txtAlerta = ''; let classeAlerta = '';
-            if (parcelas > 1 && pago_p1 >= (valBaseParcela1 - 0.05) && pago_p2 < (valBaseParcela2 - 0.05)) {
-                txtAlerta = statusVenc2.atrasado ? `⚠️ ATENÇÃO: 2ª parcela com ${Math.abs(statusVenc2.dias)} dias de atraso` : `${statusVenc2.texto} a 2ª parcela`;
-                classeAlerta = statusVenc2.atrasado ? 'pdf-valor-atrasado' : 'pdf-valor-neutro';
-            } else if (pago_p1 < (valBaseParcela1 - 0.05)) {
-                txtAlerta = statusVenc.atrasado ? `⚠️ ATENÇÃO: 1ª parcela com ${Math.abs(statusVenc.dias)} dias de atraso` : `${statusVenc.texto} a 1ª parcela`;
-                classeAlerta = statusVenc.atrasado ? 'pdf-valor-atrasado' : 'pdf-valor-neutro';
-            }
-
-            document.getElementById('pdf_cod_pedido').innerText = codPedido; 
-            document.getElementById('pdf_cliente').innerText = cliente;
-            document.getElementById('pdf_qtd').innerText = qtd; 
-            document.getElementById('pdf_total').innerText = `R$ ${total.toFixed(2)}`;
-            
-            const elP1 = document.getElementById('pdf_p1'); elP1.innerText = txtP1; elP1.className = classP1;
-            const elP2 = document.getElementById('pdf_p2'); elP2.innerText = txtP2; elP2.className = classP2;
-            
-            document.getElementById('pdf_d1_min').innerText = formatarDataBR(venc1).substring(0,5); 
-            document.getElementById('pdf_d2_min').innerText = parcelas > 1 ? formatarDataBR(venc2).substring(0,5) : '--';
-            
-            const elAlerta = document.getElementById('pdf_alerta_vencimento');
-            elAlerta.innerText = txtAlerta; elAlerta.className = classeAlerta;
-            
-            document.getElementById('pdf_data_entrega').innerText = pedido ? formatarDataBR(pedido.data_entrega) : '--';
-            document.getElementById('pdf_tabela_itens').innerHTML = htmlTable;
-            
-            abrirModal('modalPDF');
-        };
-
 
         // --- SISTEMA DE PAGAMENTOS ---
         window.abrirModalPagamento = async () => {
@@ -2544,57 +2473,110 @@
             } catch (e) { console.error(e); alert("Erro ao atualizar o banco de dados."); }
         };
 
-        // --- PDF ENGINE ---
+        // --- PDF ENGINE (Com Cálculo Automático de Multa e Juros) ---
         window.gerarPDF = async (codPedido, cliente) => {
-            const data = await fetchGlobalData();
-            let pedido = null; data.pSnap.forEach(d => { if (d.id === codPedido) pedido = d.data(); });
+            try {
+                const data = await fetchGlobalData();
+                let pedido = null; 
+                data.pSnap.forEach(d => { if(d.id === codPedido) pedido = d.data(); });
+                
+                let totalVendaOriginal = 0, parcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
+                data.vSnap.forEach(d => {
+                    const v = d.data(); 
+                    if(v.cod_pedido === codPedido && v.cliente === cliente) {
+                        qtd++; 
+                        const val = parseFloat(v.valor_venda) || 0; 
+                        totalVendaOriginal += val; 
+                        parcelas = v.parcelas || 2; 
+                        venc1 = v.venc_cliente; 
+                        const valCondicao = parcelas > 1 ? `R$ ${(val/parcelas).toFixed(2)}` : 'À Vista'; 
+                        const strParcela = parcelas > 1 ? `${parcelas}X` : '1X';
+                        htmlTable += `<tr><td>${v.cod_produto}</td><td>${v.nome_item}</td><td><strong>R$ ${val.toFixed(2)}</strong></td><td>${strParcela} (${valCondicao})</td></tr>`;
+                    }
+                });
 
-            let total = 0, parcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
-            data.vSnap.forEach(d => {
-                const v = d.data();
-                if (v.cod_pedido === codPedido && v.cliente === cliente) {
-                    qtd++; const val = parseFloat(v.valor_venda) || 0; total += val; parcelas = v.parcelas || 2; venc1 = v.venc_cliente;
-                    const valCondicao = parcelas > 1 ? `R$ ${(val / parcelas).toFixed(2)}` : 'À Vista';
-                    const strParcela = parcelas > 1 ? `${parcelas}X` : '1X';
-                    htmlTable += `<tr><td>${v.cod_produto}</td><td>${v.nome_item}</td><td>R$ ${val.toFixed(2)}</td><td>${strParcela} (${valCondicao})</td></tr>`;
+                let pago_p1 = 0, pago_p2 = 0;
+                data.pgSnap.forEach(d => { 
+                    const pg = d.data(); 
+                    if(pg.cod_pedido === codPedido && pg.cliente === cliente) { 
+                        if(pg.parcela === 1) pago_p1 += parseFloat(pg.valor_pago); 
+                        if(pg.parcela === 2) pago_p2 += parseFloat(pg.valor_pago); 
+                    } 
+                });
+
+                const valBaseP1 = parcelas > 1 ? (totalVendaOriginal / parcelas) : totalVendaOriginal; 
+                const valBaseP2 = parcelas > 1 ? (totalVendaOriginal / parcelas) : 0;
+                const venc2 = parcelas > 1 ? somar30Dias(venc1) : null;
+                
+                const statusV1 = calcularDias(venc1); 
+                const statusV2 = calcularDias(venc2);
+
+                // --- MOTOR DE CÁLCULO DE JUROS E MULTA ---
+                const calcularEncargos = (valorBase, jaPago, status) => {
+                    if (jaPago >= (valorBase - 0.1)) return { total: 0, juros: 0, multa: 0, devedor: 0 };
+                    if (!status.atrasado) return { total: valorBase - jaPago, juros: 0, multa: 0, devedor: valorBase - jaPago };
+
+                    const diasAtraso = Math.abs(status.dias);
+                    const multa = 5.93;
+                    const jurosTotal = diasAtraso * 0.89;
+                    const devedorOriginal = valorBase - jaPago;
+                    return {
+                        total: devedorOriginal + multa + jurosTotal,
+                        multa: multa,
+                        juros: jurosTotal,
+                        devedorOriginal: devedorOriginal
+                    };
+                };
+
+                const encargosP1 = calcularEncargos(valBaseP1, pago_p1, statusV1);
+                const encargosP2 = calcularEncargos(valBaseP2, pago_p2, statusV2);
+
+                // --- DEFINIÇÃO DE CORES E TEXTOS ---
+                let classP1 = 'pdf-valor-neutro'; let classP2 = 'pdf-valor-neutro';
+                if(pago_p1 >= (valBaseP1 - 0.1)) classP1 = 'pdf-valor-ok'; else if(statusV1.atrasado) classP1 = 'pdf-valor-atrasado';
+                if(parcelas > 1) {
+                    if(pago_p2 >= (valBaseP2 - 0.1)) classP2 = 'pdf-valor-ok'; else if(statusV2.atrasado) classP2 = 'pdf-valor-atrasado';
                 }
-            });
 
-            let pago_p1 = 0, pago_p2 = 0;
-            data.pgSnap.forEach(d => {
-                const pg = d.data();
-                if (pg.cod_pedido === codPedido && pg.cliente === cliente) {
-                    if (pg.parcela === 1) pago_p1 += parseFloat(pg.valor_pago);
-                    if (pg.parcela === 2) pago_p2 += parseFloat(pg.valor_pago);
+                const txtP1 = pago_p1 >= (valBaseP1 - 0.1) ? 'PAGO ✓' : `R$ ${encargosP1.total.toFixed(2)}`;
+                const txtP2 = parcelas > 1 ? (pago_p2 >= (valBaseP2 - 0.1) ? 'PAGO ✓' : `R$ ${encargosP2.total.toFixed(2)}`) : '--';
+
+                // Alerta de rodapé detalhando os juros se houver atraso
+                let txtAlerta = ''; let classeAlerta = '';
+                if (statusV1.atrasado && pago_p1 < valBaseP1) {
+                    txtAlerta = `⚠️ 1ª PARCELA ATRASADA: Valor original R$ ${encargosP1.devedorOriginal.toFixed(2)} + R$ ${encargosP1.multa} (Multa) + R$ ${encargosP1.juros.toFixed(2)} (Juros)`;
+                    classeAlerta = 'pdf-valor-atrasado';
+                } else if (statusV2 && statusV2.atrasado && pago_p2 < valBaseP2) {
+                    txtAlerta = `⚠️ 2ª PARCELA ATRASADA: Valor original R$ ${encargosP2.devedorOriginal.toFixed(2)} + R$ ${encargosP2.multa} (Multa) + R$ ${encargosP2.juros.toFixed(2)} (Juros)`;
+                    classeAlerta = 'pdf-valor-atrasado';
+                } else {
+                    txtAlerta = parcelas > 1 ? (pago_p1 >= valBaseP1 ? `${statusV2.texto} a 2ª parcela` : `${statusV1.texto} a 1ª parcela`) : statusV1.texto;
                 }
-            });
 
-            const valBaseParcela1 = parcelas > 1 ? (total / parcelas) : total;
-            const valBaseParcela2 = parcelas > 1 ? (total / parcelas) : 0;
-            const venc2 = parcelas > 1 ? somar30Dias(venc1) : null;
+                // --- INJEÇÃO NO HTML ---
+                const setEl = (id, content, className) => {
+                    const el = document.getElementById(id);
+                    if (el) { el.innerHTML = content; if (className) el.className = className; }
+                };
 
-            const txtP1 = pago_p1 >= (valBaseParcela1 - 0.05) ? 'PAGO ✅' : `R$ ${(valBaseParcela1 - pago_p1).toFixed(2)}`;
-            const txtP2 = parcelas > 1 ? (pago_p2 >= (valBaseParcela2 - 0.05) ? 'PAGO ✅' : `R$ ${(valBaseParcela2 - pago_p2).toFixed(2)}`) : '--';
-
-            const statusVenc = calcularDias(venc1); const statusVenc2 = calcularDias(venc2);
-            let txtAlerta = parcelas > 1 ? `${Math.abs(statusVenc2.dias)} Dias para vencer a 2ª parcela` : `${Math.abs(statusVenc.dias)} Dias para vencer o pedido`;
-
-            document.getElementById('pdf_cod_pedido').innerText = codPedido;
-            document.getElementById('pdf_cliente').innerText = cliente;
-            document.getElementById('pdf_qtd').innerText = qtd;
-            document.getElementById('pdf_total').innerText = `R$ ${total.toFixed(2)}`;
-
-            document.getElementById('pdf_p1').innerText = txtP1;
-            document.getElementById('pdf_p2').innerText = txtP2;
-
-            document.getElementById('pdf_d1').innerText = formatarDataBR(venc1);
-            document.getElementById('pdf_d2').innerText = parcelas > 1 ? formatarDataBR(venc2) : '--';
-
-            document.getElementById('pdf_alerta_vencimento').innerText = txtAlerta;
-            document.getElementById('pdf_data_entrega').innerText = pedido ? formatarDataBR(pedido.data_entrega) : '--';
-            document.getElementById('pdf_tabela_itens').innerHTML = htmlTable;
-
-            abrirModal('modalPDF');
+                setEl('pdf_cod_pedido', codPedido);
+                setEl('pdf_cliente', cliente);
+                setEl('pdf_qtd', qtd);
+                setEl('pdf_total', `R$ ${totalVendaOriginal.toFixed(2)}`);
+                setEl('pdf_p1', txtP1, classP1);
+                setEl('pdf_p2', txtP2, classP2);
+                setEl('pdf_d1_min', venc1 ? formatarDataBR(venc1).substring(0,5) : '--');
+                setEl('pdf_d2_min', (parcelas > 1 && venc2) ? formatarDataBR(venc2).substring(0,5) : '--');
+                setEl('pdf_alerta_vencimento', txtAlerta, classeAlerta);
+                setEl('pdf_data_entrega', (pedido && pedido.data_entrega) ? formatarDataBR(pedido.data_entrega) : '--');
+                setEl('pdf_tabela_itens', htmlTable);
+                
+                abrirModal('modalPDF');
+                
+            } catch (err) {
+                console.error("Erro no PDF:", err);
+                alert("Falha ao gerar PDF.");
+            }
         };
 
         window.compartilharPDF = async () => {
