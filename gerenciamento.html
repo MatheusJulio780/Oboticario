@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/1890/1890663.png" type="image/png">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -75,76 +76,194 @@
         }
 
         /* --- SIDEBAR PREMIUM (Floating Glass) --- */
-        nav.sidebar { 
-            position: fixed; 
-            top: 20px; left: 20px; bottom: 20px; 
-            width: 80px; 
-            background: var(--bg-card); 
-            border: 1px solid var(--border); 
-            border-radius: 24px; 
-            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease; 
-            display: flex; flex-direction: column; align-items: center; 
-            padding: 25px 0; z-index: 50; overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        nav.sidebar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            bottom: 20px;
+            width: 80px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 0;
+            z-index: 50;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
-        nav.sidebar:hover { 
-            width: 260px; 
-            align-items: flex-start; 
-            padding-left: 20px; 
-            box-shadow: 0 20px 40px rgba(0,128,128,0.15); 
+
+        nav.sidebar:hover {
+            width: 260px;
+            align-items: flex-start;
+            padding-left: 20px;
+            box-shadow: 0 20px 40px rgba(0, 128, 128, 0.15);
         }
 
         .brand-logo {
-            width: 45px; height: 45px;
+            width: 45px;
+            height: 45px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.4rem; font-weight: 800;
-            margin-bottom: 35px; transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,128,128,0.4);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 35px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 128, 128, 0.4);
             flex-shrink: 0;
         }
-        nav.sidebar:hover .brand-logo { width: calc(100% - 20px); justify-content: flex-start; padding-left: 15px; }
-        .brand-logo span { display: none; margin-left: 12px; font-size: 1.1rem; letter-spacing: 1px; color: white; }
-        nav.sidebar:hover .brand-logo span { display: block; }
-        
-        .nav-item { 
-            width: calc(100% - 20px); 
-            margin: 0 auto 8px auto; 
-            padding: 14px 0; 
-            color: var(--text-muted); 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
-            border-radius: 12px; position: relative; 
+
+        nav.sidebar:hover .brand-logo {
+            width: calc(100% - 20px);
+            justify-content: flex-start;
+            padding-left: 15px;
         }
-        nav.sidebar:hover .nav-item { width: calc(100% - 20px); justify-content: flex-start; padding-left: 15px; margin-left: 0;}
-        .nav-item i { font-size: 1.25rem; min-width: 40px; text-align: center; transition: 0.3s; }
-        .nav-item span { display: none; font-weight: 600; font-size: 0.95rem; white-space: nowrap; }
-        nav.sidebar:hover .nav-item span { display: block; }
-        
+
+        .brand-logo span {
+            display: none;
+            margin-left: 12px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        nav.sidebar:hover .brand-logo span {
+            display: block;
+        }
+
+        .nav-item {
+            width: calc(100% - 20px);
+            margin: 0 auto 8px auto;
+            padding: 14px 0;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        nav.sidebar:hover .nav-item {
+            width: calc(100% - 20px);
+            justify-content: flex-start;
+            padding-left: 15px;
+            margin-left: 0;
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+            min-width: 40px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .nav-item span {
+            display: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        nav.sidebar:hover .nav-item span {
+            display: block;
+        }
+
         /* Indicador de Página Ativa */
-        .nav-item.active { 
-            background: var(--surface); color: var(--primary-light); 
+        .nav-item.active {
+            background: var(--surface);
+            color: var(--primary-light);
             box-shadow: inset 4px 0 0 var(--primary-light);
         }
-        .nav-item.active i { transform: scale(1.1); }
-        .nav-item:hover:not(.active) { background: rgba(0,128,128,0.05); color: var(--text-main); transform: translateX(4px); }
 
-        .sys-toggles { margin-top: auto; display: flex; flex-direction: column; gap: 8px; width: 100%; align-items: center; padding: 0 10px; }
-        nav.sidebar:hover .sys-toggles { align-items: flex-start; padding: 0; width: calc(100% - 20px); }
-        
-        .theme-toggle { 
-            background: transparent; border: 1px solid transparent; color: var(--text-muted); 
-            cursor: pointer; padding: 12px 0; border-radius: 12px; font-size: 1.1rem; transition: 0.3s; 
-            display: flex; align-items: center; width: 100%; justify-content: center;
+        .nav-item.active i {
+            transform: scale(1.1);
         }
-        nav.sidebar:hover .theme-toggle { justify-content: flex-start; padding-left: 15px; border-color: var(--border); background: var(--bg-body); }
-        .theme-toggle span { display: none; font-size: 0.85rem; font-weight: 600; margin-left: 15px; white-space: nowrap; }
-        nav.sidebar:hover .theme-toggle span { display: block; }
-        .theme-toggle:hover { color: var(--primary-light); background: var(--surface); border-color: transparent; }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(0, 128, 128, 0.05);
+            color: var(--text-main);
+            transform: translateX(4px);
+        }
+
+        .sys-toggles {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        nav.sidebar:hover .sys-toggles {
+            align-items: flex-start;
+            padding: 0;
+            width: calc(100% - 20px);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 12px 0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+        }
+
+        nav.sidebar:hover .theme-toggle {
+            justify-content: flex-start;
+            padding-left: 15px;
+            border-color: var(--border);
+            background: var(--bg-body);
+        }
+
+        .theme-toggle span {
+            display: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 15px;
+            white-space: nowrap;
+        }
+
+        nav.sidebar:hover .theme-toggle span {
+            display: block;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-light);
+            background: var(--surface);
+            border-color: transparent;
+        }
 
         /* Ajuste do Main Container para respeitar a Sidebar Flutuante */
-        main.container { margin-left: 120px; padding: 40px; width: calc(100% - 120px); transition: var(--transition); min-height: 100vh; }
-        nav.sidebar:hover ~ main.container { opacity: 0.6; filter: blur(2px); pointer-events: none; transform: scale(0.99); }
+        main.container {
+            margin-left: 120px;
+            padding: 40px;
+            width: calc(100% - 120px);
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        nav.sidebar:hover~main.container {
+            opacity: 0.6;
+            filter: blur(2px);
+            pointer-events: none;
+            transform: scale(0.99);
+        }
 
         .page {
             display: none;
@@ -702,7 +821,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         /* PDF PREMIUM LAYOUT (Blindado contra Dark Mode) */
         .pdf-wrapper {
             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
@@ -870,11 +989,13 @@
 
         /* Ajustes para Celulares (Telas menores que 768px) */
         @media (max-width: 768px) {
-            #mobile-menu-btn { display: block; }
+            #mobile-menu-btn {
+                display: block;
+            }
 
             /* Joga a barra totalmente para fora da tela, já expandida */
             nav.sidebar {
-                width: 260px !important; 
+                width: 260px !important;
                 left: -320px;
                 align-items: flex-start;
                 padding-left: 20px;
@@ -884,37 +1005,90 @@
             /* Desliza a barra para dentro */
             nav.sidebar.mobile-open {
                 left: 15px;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             }
 
             /* Força a exibição dos textos, ignorando o comportamento de hover do PC */
-            nav.sidebar span, .brand-logo span { display: block !important; }
-            .brand-logo { width: calc(100% - 20px) !important; justify-content: flex-start !important; padding-left: 15px !important; }
-            .nav-item { justify-content: flex-start !important; padding-left: 15px !important; margin-left: 0 !important; width: calc(100% - 20px) !important; }
-            .sys-toggles { align-items: flex-start !important; padding: 0 !important; width: calc(100% - 20px) !important; }
-            .theme-toggle { justify-content: flex-start !important; padding-left: 15px !important; }
+            nav.sidebar span,
+            .brand-logo span {
+                display: block !important;
+            }
+
+            .brand-logo {
+                width: calc(100% - 20px) !important;
+                justify-content: flex-start !important;
+                padding-left: 15px !important;
+            }
+
+            .nav-item {
+                justify-content: flex-start !important;
+                padding-left: 15px !important;
+                margin-left: 0 !important;
+                width: calc(100% - 20px) !important;
+            }
+
+            .sys-toggles {
+                align-items: flex-start !important;
+                padding: 0 !important;
+                width: calc(100% - 20px) !important;
+            }
+
+            .theme-toggle {
+                justify-content: flex-start !important;
+                padding-left: 15px !important;
+            }
 
             /* Ajuste do Main Container */
             main.container {
                 margin-left: 0;
-                padding: 80px 15px 20px 15px; /* Espaço para o botão hambúrguer */
+                padding: 80px 15px 20px 15px;
+                /* Espaço para o botão hambúrguer */
                 width: 100%;
             }
 
             /* Anula o "blur" de fundo do hover do PC quando tocado no celular */
-            nav.sidebar:hover ~ main.container { opacity: 1; filter: none; transform: none; pointer-events: auto; }
+            nav.sidebar:hover~main.container {
+                opacity: 1;
+                filter: none;
+                transform: none;
+                pointer-events: auto;
+            }
 
             /* Dashboard Compacto */
-            .dash-grid-top { grid-template-columns: 1fr; }
-            .dash-grid-main { grid-template-columns: 1fr !important; }
-            .dash-metric-value { font-size: 1.5rem !important; }
-            .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .cards-grid { grid-template-columns: 1fr; }
+            .dash-grid-top {
+                grid-template-columns: 1fr;
+            }
+
+            .dash-grid-main {
+                grid-template-columns: 1fr !important;
+            }
+
+            .dash-metric-value {
+                font-size: 1.5rem !important;
+            }
+
+            .header-flex {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
 
             #menu-overlay {
-                display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 45; backdrop-filter: blur(3px);
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 45;
+                backdrop-filter: blur(3px);
             }
-            #menu-overlay.active { display: block; }
+
+            #menu-overlay.active {
+                display: block;
+            }
         }
     </style>
 
@@ -939,20 +1113,28 @@
 
     <nav class="sidebar">
         <div class="brand-logo">
-            <i class="fa-solid fa-spray-can-sparkles"></i>
+            <i class="fa-brands fa-mixer"></i>
             <span>Oboticário</span>
         </div>
 
-        <div class="nav-item active" onclick="switchPage('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></div>
-        <div class="nav-item" onclick="switchPage('pedidos')"><i class="fa-solid fa-box-open"></i><span>Pedidos</span></div>
-        <div class="nav-item" onclick="switchPage('vendas')"><i class="fa-solid fa-users-viewfinder"></i><span>Vendas</span></div>
-        <div class="nav-item" onclick="switchPage('clientes')"><i class="fa-solid fa-address-book"></i><span>Clientes</span></div>
-        <div class="nav-item" onclick="switchPage('pagamentos')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Recebimentos Clientes</span></div>
-        <div class="nav-item" onclick="switchPage('produtos')"><i class="fa-solid fa-tags"></i><span>Produtos</span></div>
-        
+        <div class="nav-item active" onclick="switchPage('dashboard')"><i
+                class="fa-solid fa-chart-pie"></i><span>Dashboard</span></div>
+        <div class="nav-item" onclick="switchPage('pedidos')"><i class="fa-solid fa-box-open"></i><span>Pedidos</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('vendas')"><i
+                class="fa-solid fa-users-viewfinder"></i><span>Vendas</span></div>
+        <div class="nav-item" onclick="switchPage('clientes')"><i
+                class="fa-solid fa-address-book"></i><span>Clientes</span></div>
+        <div class="nav-item" onclick="switchPage('pagamentos')"><i
+                class="fa-solid fa-hand-holding-dollar"></i><span>Recebimentos Clientes</span></div>
+        <div class="nav-item" onclick="switchPage('produtos')"><i class="fa-solid fa-tags"></i><span>Produtos</span>
+        </div>
+
         <div class="sys-toggles">
-            <button class="theme-toggle" onclick="toggleLiteMode()"><i class="fa-solid fa-bolt"></i><span>Modo Desempenho</span></button>
-            <button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i><span>Mudar Tema</span></button>
+            <button class="theme-toggle" onclick="toggleLiteMode()"><i class="fa-solid fa-bolt"></i><span>Modo
+                    Desempenho</span></button>
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i><span>Mudar
+                    Tema</span></button>
         </div>
     </nav>
 
@@ -961,7 +1143,9 @@
         <section id="page-dashboard" class="page active">
             <div class="header-flex" style="margin-bottom: 20px;">
                 <div>
-                    <h2 style="font-size: 1.4rem;">Dashboard</h2>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <h2 style="font-size: 1.4rem;">Dashboard</h2>
+                    </div>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <label style="margin:0; font-size: 0.7rem;">Período:</label>
@@ -1655,34 +1839,34 @@
         window.carregarDashboardEngine = async () => {
             try {
                 const data = await fetchGlobalData();
-                
+
                 const filtroEl = document.getElementById('dash_filtro_mes');
                 if (!filtroEl.dataset.setted) {
                     const mesHoje = String(new Date().getMonth() + 1).padStart(2, '0');
                     filtroEl.value = mesHoje;
                     filtroEl.dataset.setted = "true";
                 }
-                
-                const filtroMes = filtroEl.value; 
+
+                const filtroMes = filtroEl.value;
 
                 let totalRevenda = 0, totalCusto = 0;
                 let rankingProdutos = {}; let comprasPorCliente = {}; let vendasPorDia = {};
                 const mapClientesMes = {};
 
                 data.vSnap.forEach(d => {
-                    const v = d.data(); 
-                    if(!v.venc_cliente) return;
-                    
+                    const v = d.data();
+                    if (!v.venc_cliente) return;
+
                     const partes = v.venc_cliente.split('-');
                     const mesVenda = partes[1];
 
                     // Filtro Operacional
                     if (filtroMes !== "all" && mesVenda !== filtroMes) return;
 
-                    const valVenda = parseFloat(v.valor_venda) || 0; 
-                    totalRevenda += valVenda; 
+                    const valVenda = parseFloat(v.valor_venda) || 0;
+                    totalRevenda += valVenda;
                     totalCusto += (parseFloat(v.valor_real) || 0);
-                    
+
                     const dia = partes[2];
                     const labelDia = filtroMes === "all" ? `${dia}/${mesVenda}` : dia;
                     vendasPorDia[labelDia] = (vendasPorDia[labelDia] || 0) + valVenda;
@@ -1690,19 +1874,19 @@
                     comprasPorCliente[v.cliente] = (comprasPorCliente[v.cliente] || 0) + valVenda;
 
                     let prodName = v.nome_item || "Desconhecido";
-                    if(!rankingProdutos[prodName]) rankingProdutos[prodName] = { qtd: 0 };
+                    if (!rankingProdutos[prodName]) rankingProdutos[prodName] = { qtd: 0 };
                     rankingProdutos[prodName].qtd += 1;
 
-                    if(!mapClientesMes[v.cliente]) mapClientesMes[v.cliente] = { sacolas: {} };
-                    if(!mapClientesMes[v.cliente].sacolas[v.cod_pedido]) {
-                        mapClientesMes[v.cliente].sacolas[v.cod_pedido] = { req: 0, pago: 0, venc: v.venc_cliente, parcelas: v.parcelas||2 };
+                    if (!mapClientesMes[v.cliente]) mapClientesMes[v.cliente] = { sacolas: {} };
+                    if (!mapClientesMes[v.cliente].sacolas[v.cod_pedido]) {
+                        mapClientesMes[v.cliente].sacolas[v.cod_pedido] = { req: 0, pago: 0, venc: v.venc_cliente, parcelas: v.parcelas || 2 };
                     }
                     mapClientesMes[v.cliente].sacolas[v.cod_pedido].req += valVenda;
                 });
 
                 data.pgSnap.forEach(d => {
                     const pg = d.data();
-                    if(mapClientesMes[pg.cliente] && mapClientesMes[pg.cliente].sacolas[pg.cod_pedido]) {
+                    if (mapClientesMes[pg.cliente] && mapClientesMes[pg.cliente].sacolas[pg.cod_pedido]) {
                         mapClientesMes[pg.cliente].sacolas[pg.cod_pedido].pago += pg.valor_pago;
                     }
                 });
@@ -1711,24 +1895,24 @@
                 const htmlAlertas = document.getElementById('dash_lista_cobranca'); htmlAlertas.innerHTML = '';
                 let listaAlertas = [];
 
-                for(const c in mapClientesMes) {
-                    for(const cod in mapClientesMes[c].sacolas) {
+                for (const c in mapClientesMes) {
+                    for (const cod in mapClientesMes[c].sacolas) {
                         const s = mapClientesMes[c].sacolas[cod];
-                        
+
                         const pendente = s.req - s.pago;
-                        if(pendente > 0) aReceberFiltrado += pendente;
+                        if (pendente > 0) aReceberFiltrado += pendente;
 
                         const valParc = s.parcelas > 1 ? s.req / s.parcelas : s.req;
                         const p1_ok = s.pago >= (valParc - 0.1);
                         const p2_ok = s.pago >= (s.req - 0.1);
-                        
-                        if(!p1_ok || !p2_ok) {
+
+                        if (!p1_ok || !p2_ok) {
                             let tDate = p1_ok ? somar30Dias(s.venc) : s.venc;
-                            listaAlertas.push({ 
-                                cliente: c, 
-                                parcela: p1_ok ? '2ª' : '1ª', 
-                                val: p1_ok ? (s.req - s.pago) : valParc, 
-                                ...calcularDias(tDate) 
+                            listaAlertas.push({
+                                cliente: c,
+                                parcela: p1_ok ? '2ª' : '1ª',
+                                val: p1_ok ? (s.req - s.pago) : valParc,
+                                ...calcularDias(tDate)
                             });
                         }
                     }
@@ -1738,49 +1922,37 @@
                 document.getElementById('dash_lucro').innerText = `R$ ${(totalRevenda - totalCusto).toFixed(2)}`;
                 document.getElementById('dash_receber').innerText = `R$ ${aReceberFiltrado.toFixed(2)}`;
 
-                listaAlertas.sort((a,b) => a.dias - b.dias).slice(0, 6).forEach(a => {
-                    htmlAlertas.innerHTML += `<div class="alert-item" style="padding: 8px 0;"><div class="alert-info"><span class="alert-name" style="font-size:0.8rem;">${a.cliente}</span><span style="font-size:0.7rem; color:${a.atrasado ? 'var(--danger)':'var(--warning)'}">${a.texto}</span></div><strong style="font-size:0.8rem;">R$ ${a.val.toFixed(2)}</strong></div>`;
+                listaAlertas.sort((a, b) => a.dias - b.dias).slice(0, 6).forEach(a => {
+                    htmlAlertas.innerHTML += `<div class="alert-item" style="padding: 8px 0;"><div class="alert-info"><span class="alert-name" style="font-size:0.8rem;">${a.cliente}</span><span style="font-size:0.7rem; color:${a.atrasado ? 'var(--danger)' : 'var(--warning)'}">${a.texto}</span></div><strong style="font-size:0.8rem;">R$ ${a.val.toFixed(2)}</strong></div>`;
                 });
-
-                const hojeStr = new Date().toISOString().split('T')[0];
-                if(localStorage.getItem('ntfy_last_run') !== hojeStr && listaAlertas.length > 0) {
-                    const topicoNTFY = "bto_cob_matheus";
-                    const appUrl = window.location.href;
-                    listaAlertas.forEach(a => {
-                        if(!a.atrasado && a.dias <= 5 && a.dias >= 0) {
-                            fetch(`https://ntfy.sh/${topicoNTFY}`, { method: 'POST', body: `A ${a.parcela} parcela de ${a.cliente} (R$ ${a.val.toFixed(2)}) vence em ${a.dias === 0 ? 'HOJE!' : a.dias + ' dias'}.`, headers: { 'Title': 'Cobrança Próxima 💰', 'Tags': 'warning,money_with_wings', 'Click': appUrl } }).catch(e => console.log(e));
-                        }
-                    });
-                    localStorage.setItem('ntfy_last_run', hojeStr);
-                }
-
+                
                 const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                if(chartLineInst) chartLineInst.destroy(); 
-                if(chartBarInst) chartBarInst.destroy();
+                if (chartLineInst) chartLineInst.destroy();
+                if (chartBarInst) chartBarInst.destroy();
 
-                let labelsDias = Object.keys(vendasPorDia).sort((a,b) => parseInt(a) - parseInt(b));
+                let labelsDias = Object.keys(vendasPorDia).sort((a, b) => parseInt(a) - parseInt(b));
                 chartLineInst = new Chart(document.getElementById('chartFaturamento'), {
-                    type: 'line', 
-                    data: { 
-                        labels: labelsDias.length ? labelsDias : ['Sem dados'], 
-                        datasets: [{ data: labelsDias.length ? labelsDias.map(l => vendasPorDia[l]) : [0], borderColor: '#2eb8b8', backgroundColor: 'rgba(46, 184, 184, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 2 }] 
+                    type: 'line',
+                    data: {
+                        labels: labelsDias.length ? labelsDias : ['Sem dados'],
+                        datasets: [{ data: labelsDias.length ? labelsDias.map(l => vendasPorDia[l]) : [0], borderColor: '#2eb8b8', backgroundColor: 'rgba(46, 184, 184, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 2 }]
                     },
                     options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: isDark ? '#1a2424' : '#eee' } }, x: { grid: { display: false } } } }
                 });
 
-                let topCli = Object.keys(comprasPorCliente).map(k => ({n: k, v: comprasPorCliente[k]})).sort((a,b) => b.v - a.v).slice(0, 5);
+                let topCli = Object.keys(comprasPorCliente).map(k => ({ n: k, v: comprasPorCliente[k] })).sort((a, b) => b.v - a.v).slice(0, 5);
                 chartBarInst = new Chart(document.getElementById('chartTopClientes'), {
-                    type: 'bar', 
-                    data: { 
-                        labels: topCli.length ? topCli.map(c => c.n.split(' ')[0]) : ['Nenhum'], 
-                        datasets: [{ data: topCli.length ? topCli.map(c => c.v) : [0], backgroundColor: '#2eb8b8', borderRadius: 4 }] 
+                    type: 'bar',
+                    data: {
+                        labels: topCli.length ? topCli.map(c => c.n.split(' ')[0]) : ['Nenhum'],
+                        datasets: [{ data: topCli.length ? topCli.map(c => c.v) : [0], backgroundColor: '#2eb8b8', borderRadius: 4 }]
                     },
                     options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
 
                 const htmlProd = document.getElementById('dash_lista_produtos'); htmlProd.innerHTML = '';
-                Object.keys(rankingProdutos).map(k => ({n: k, q: rankingProdutos[k].qtd})).sort((a,b) => b.q - a.q).slice(0, 4).forEach((p, i) => {
-                    htmlProd.innerHTML += `<tr><td style="padding:5px 0;">${i+1}. ${p.n.substring(0,20)}</td><td style="text-align:right; font-weight:800; color:var(--primary-light);">${p.q}</td></tr>`;
+                Object.keys(rankingProdutos).map(k => ({ n: k, q: rankingProdutos[k].qtd })).sort((a, b) => b.q - a.q).slice(0, 4).forEach((p, i) => {
+                    htmlProd.innerHTML += `<tr><td style="padding:5px 0;">${i + 1}. ${p.n.substring(0, 20)}</td><td style="text-align:right; font-weight:800; color:var(--primary-light);">${p.q}</td></tr>`;
                 });
 
             } catch (error) {
@@ -1991,18 +2163,18 @@
 
         // --- ABA: VENDAS (Com População de Filtro Dinâmico) ---
         async function carregarVendasEngine() {
-            const grid = document.getElementById('grid-vendas-agrupadas'); 
+            const grid = document.getElementById('grid-vendas-agrupadas');
             grid.innerHTML = '';
             const data = await fetchGlobalData();
-            
+
             const matriz = {};
             const pedidosUnicos = new Set(); // Para popular o filtro
 
             data.vSnap.forEach(d => {
-                const v = d.data(); v.docId = d.id; 
+                const v = d.data(); v.docId = d.id;
                 pedidosUnicos.add(v.cod_pedido);
-                if(!matriz[v.cod_pedido]) matriz[v.cod_pedido] = {};
-                if(!matriz[v.cod_pedido][v.cliente]) matriz[v.cod_pedido][v.cliente] = { itens: [], venc_base: v.venc_cliente, parcelas: v.parcelas };
+                if (!matriz[v.cod_pedido]) matriz[v.cod_pedido] = {};
+                if (!matriz[v.cod_pedido][v.cliente]) matriz[v.cod_pedido][v.cliente] = { itens: [], venc_base: v.venc_cliente, parcelas: v.parcelas };
                 matriz[v.cod_pedido][v.cliente].itens.push(v);
             });
 
@@ -2020,40 +2192,40 @@
                 for (const cliente in matriz[cod_pedido]) {
                     const dadosCli = matriz[cod_pedido][cliente];
                     let req_p1 = 0, req_p2 = 0, total = 0;
-                    
+
                     dadosCli.itens.forEach(it => {
                         let val = parseFloat(it.valor_venda) || 0; total += val;
-                        req_p1 += (dadosCli.parcelas > 1 ? val/dadosCli.parcelas : val); 
-                        req_p2 += (dadosCli.parcelas > 1 ? val/dadosCli.parcelas : 0);
+                        req_p1 += (dadosCli.parcelas > 1 ? val / dadosCli.parcelas : val);
+                        req_p2 += (dadosCli.parcelas > 1 ? val / dadosCli.parcelas : 0);
                     });
-                    
+
                     let pago_p1 = 0, pago_p2 = 0;
-                    data.pgSnap.forEach(pgD => { 
-                        const pg = pgD.data(); 
-                        if(pg.cod_pedido === cod_pedido && pg.cliente === cliente) { 
-                            if(pg.parcela === 1) pago_p1 += pg.valor_pago; 
-                            if(pg.parcela === 2) pago_p2 += pg.valor_pago; 
-                        } 
+                    data.pgSnap.forEach(pgD => {
+                        const pg = pgD.data();
+                        if (pg.cod_pedido === cod_pedido && pg.cliente === cliente) {
+                            if (pg.parcela === 1) pago_p1 += pg.valor_pago;
+                            if (pg.parcela === 2) pago_p2 += pg.valor_pago;
+                        }
                     });
-                    
-                    const p1_paga = pago_p1 >= (req_p1 - 0.1); 
+
+                    const p1_paga = pago_p1 >= (req_p1 - 0.1);
                     const p2_paga = pago_p2 >= (req_p2 - 0.1) || dadosCli.parcelas === 1;
-                    
+
                     let targetDate = p1_paga ? somar30Dias(dadosCli.venc_base) : dadosCli.venc_base;
                     let targetParcStr = p1_paga ? (p2_paga ? 'LIQUIDADO' : '2ª PENDENTE') : '1ª PENDENTE';
                     let status = calcularDias(targetDate);
-                    if(p1_paga && p2_paga) { status.texto = "CONCLUÍDO"; status.dias = 9999; }
+                    if (p1_paga && p2_paga) { status.texto = "CONCLUÍDO"; status.dias = 9999; }
 
                     blocos.push({ cod_pedido, cliente, dadosCli, total, p1_paga, targetParcStr, status });
                 }
             }
 
-            blocos.sort((a,b) => a.status.dias - b.status.dias);
+            blocos.sort((a, b) => a.status.dias - b.status.dias);
             blocos.forEach(b => {
                 let classBadge = 'badge-safe'; let corStr = 'var(--success)';
-                if(b.targetParcStr !== 'LIQUIDADO') { 
-                    classBadge = b.status.atrasado ? 'badge-alert' : 'badge-warning'; 
-                    corStr = b.status.atrasado ? 'var(--danger)' : 'var(--warning)'; 
+                if (b.targetParcStr !== 'LIQUIDADO') {
+                    classBadge = b.status.atrasado ? 'badge-alert' : 'badge-warning';
+                    corStr = b.status.atrasado ? 'var(--danger)' : 'var(--warning)';
                 }
 
                 grid.innerHTML += `
@@ -2089,7 +2261,7 @@
             const cards = document.querySelectorAll('#grid-vendas-agrupadas .card-box');
             cards.forEach(card => {
                 const pedidoCard = card.getAttribute('data-pedido');
-                if(escolha === 'all' || pedidoCard === escolha) {
+                if (escolha === 'all' || pedidoCard === escolha) {
                     card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
@@ -2905,6 +3077,27 @@
                 }
             }
         };
+
+        // --- TESTE DE CONEXÃO NTFY ---
+        window.testarNotificacaoNTFY = () => {
+            const topicoNTFY = "bto_cob_matheus";
+            
+            fetch(`https://ntfy.sh/${topicoNTFY}`, { 
+                method: 'POST', 
+                body: `Conexão bem-sucedida! Seu sistema BTO está enviando alertas para o seu iPhone corretamente.`, 
+                headers: { 
+                    'Title': 'BTO System Conectado', // Emojis removidos para evitar erro de ISO-8859-1
+                    'Tags': 'tada,white_check_mark', // O app renderiza os emojis a partir destas tags
+                    'Priority': 'default'
+                } 
+            }).then(() => {
+                alert("Sinal enviado! Veja se a notificação chegou no seu celular.");
+            }).catch(e => {
+                console.error("Erro no envio:", e);
+                alert("Erro ao tentar enviar o sinal.");
+            });
+        };
+
     </script>
 </body>
 
