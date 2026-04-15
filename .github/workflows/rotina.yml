@@ -1,0 +1,29 @@
+name: Rotina de Cobranca NTFY
+
+on:
+  schedule:
+    # Roda todos os dias às 08:00 da manhã (Horário de Brasília)
+    - cron: '0 11 * * *'
+  workflow_dispatch: # Permite que você rode manualmente clicando em um botão
+
+jobs:
+  verificar-vencimentos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v3
+
+      - name: Configurar o Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Instalar pacotes
+        run: |
+          npm init -y
+          npm install firebase
+
+      - name: Rodar a varredura
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        run: node check-cobranca.mjs
