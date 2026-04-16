@@ -551,130 +551,85 @@
         }
 
         /* =======================================================
-       O RECIBO PDF (FORÇA BRUTA BRANCA E DE ALTO CONTRASTE)
-       ======================================================= */
+           O RECIBO PDF (ESTRUTURA DE ALTO CONTRASTE E BLINDAGEM MOBILE)
+           ======================================================= */
         #pdf-wrapper {
             background: #ffffff !important;
-            /* Força branco absoluto sempre */
             color: #0f172a !important;
-            /* Texto chumbo escuro, quase preto */
             padding: 40px !important;
             border-radius: 0px !important;
-            /* Recibos não têm borda arredondada na impressão */
             font-family: 'Plus Jakarta Sans', sans-serif !important;
-            box-shadow: var(--bg-card) !important;
+            box-shadow: none !important;
+            min-width: 650px !important; /* FORÇA LARGURA DE PAPEL MESMO NO CELULAR */
+            margin: 0 auto;
         }
 
-        #pdf-wrapper h2 {
-            color: #020617 !important;
+        /* Cabeçalho do Recibo */
+        #pdf-wrapper .pdf-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-end !important;
             border-bottom: 3px solid #cbd5e1 !important;
-            padding-bottom: 15px !important;
-            margin-bottom: 25px !important;
+            padding-bottom: 20px !important;
+            margin-bottom: 30px !important;
+        }
+        
+        #pdf-wrapper .pdf-brand h2 {
+            color: #020617 !important;
             font-size: 1.8rem !important;
             font-weight: 800 !important;
-            text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin: 0 0 5px 0 !important;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left;
         }
+        #pdf-wrapper .pdf-brand span { font-size: 0.9rem !important; color: #64748b !important; font-weight: 800 !important; text-transform: uppercase; }
 
-        #pdf-wrapper p {
-            font-size: 1rem !important;
-            margin-bottom: 8px !important;
-            color: #334155 !important;
-        }
+        #pdf-wrapper .pdf-header-info { text-align: right !important; display: flex !important; flex-direction: column !important; }
+        #pdf-wrapper .pdf-header-info span { font-size: 0.8rem !important; color: #64748b !important; text-transform: uppercase; font-weight: 800 !important; margin-bottom: 4px !important; }
+        #pdf-wrapper .pdf-header-info strong { font-size: 1.3rem !important; color: #0f172a !important; font-weight: 800 !important; }
+        #pdf-wrapper .pdf-caixa-ref { font-size: 0.85rem !important; color: #94a3b8 !important; margin-top: 5px !important; font-weight: 600 !important; }
 
-        #pdf-wrapper strong {
-            color: #020617 !important;
-            font-weight: 800 !important;
+        /* Blocos de Informação (Valores e Parcelas) */
+        #pdf-wrapper .pdf-stats {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 15px !important;
+            background: #f8fafc !important;
+            padding: 20px !important;
+            border-radius: 12px !important;
+            border: 1px solid #e2e8f0 !important;
+            margin-bottom: 30px !important;
         }
+        #pdf-wrapper .pdf-stats-box { display: flex !important; flex-direction: column !important; }
+        #pdf-wrapper .pdf-stats-box span { font-size: 0.75rem !important; color: #64748b !important; text-transform: uppercase; font-weight: 800 !important; margin-bottom: 8px !important; }
+        #pdf-wrapper .pdf-stats-box strong { font-size: 1.15rem !important; color: #020617 !important; font-weight: 800 !important; }
+        #pdf-wrapper .pdf-stats-box small { font-size: 0.65rem !important; color: #94a3b8 !important; display: block; margin-top: 2px; }
 
         /* Tabela do PDF */
-        #pdf-wrapper table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            margin-top: 25px !important;
-            margin-bottom: 25px !important;
-        }
+        #pdf-wrapper table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 30px !important; }
+        #pdf-wrapper th { background: #f1f5f9 !important; color: #475569 !important; font-weight: 800 !important; text-transform: uppercase; font-size: 0.75rem !important; padding: 14px 15px !important; border-bottom: 2px solid #94a3b8 !important; text-align: left !important; }
+        #pdf-wrapper td { padding: 14px 15px !important; border-bottom: 1px solid #e2e8f0 !important; font-size: 0.9rem !important; color: #1e293b !important; font-weight: 500 !important; }
+        #pdf-wrapper tr:nth-child(even) td { background: #f8fafc !important; }
+        #pdf-wrapper td strong { font-weight: 800 !important; color: #020617 !important; }
 
-        #pdf-wrapper th {
-            background: #f1f5f9 !important;
-            color: #475569 !important;
-            font-weight: 800 !important;
-            text-transform: uppercase;
-            font-size: 0.8rem !important;
-            padding: 14px 15px !important;
-            border-bottom: 2px solid #94a3b8 !important;
-            text-align: left !important;
-        }
+        /* Rodapé do PDF */
+        #pdf-wrapper .pdf-footer { text-align: center !important; padding-top: 20px !important; border-top: 2px solid #e2e8f0 !important; }
+        #pdf-wrapper .pdf-footer strong { font-size: 0.95rem !important; color: #0f172a !important; display: block !important; margin-bottom: 8px !important; }
+        #pdf-wrapper .pdf-footer p { font-size: 0.75rem !important; color: #64748b !important; margin: 0 !important; }
 
-        #pdf-wrapper td {
-            padding: 14px 15px !important;
-            border-bottom: 1px solid #e2e8f0 !important;
-            font-size: 0.95rem !important;
-            color: #1e293b !important;
-        }
+        /* Badges de Status injetados pelo JS */
+        .pdf-valor-ok { color: #166534 !important; background: #dcfce7 !important; padding: 4px 8px !important; border-radius: 6px !important; }
+        .pdf-valor-atrasado { color: #991b1b !important; background: #fee2e2 !important; padding: 4px 8px !important; border-radius: 6px !important; border: 1px solid #fca5a5 !important; }
+        .pdf-valor-neutro { color: #475569 !important; background: #f1f5f9 !important; padding: 4px 8px !important; border-radius: 6px !important; }
 
-        /* Efeito zebrado na tabela do PDF */
-        #pdf-wrapper tr:nth-child(even) td {
-            background: #f8fafc !important;
-        }
-
-        /* Badges de Status injetados pelo JS no PDF */
-        .pdf-valor-ok {
-            color: #166534 !important;
-            font-weight: 800 !important;
-            background: #dcfce7 !important;
-            padding: 6px 10px !important;
-            margin: 10px;
-            margin: 6px;
-            border-radius: 6px !important;
-            display: inline-block !important;
-        }
-
-        .pdf-valor-atrasado {
-            color: #991b1b !important;
-            font-weight: 800 !important;
-            background: #fee2e2 !important;
-            margin: 10px;
-            padding: 6px 10px !important;
-            border-radius: 6px !important;
-            display: inline-block !important;
-            border: 1px solid #fca5a5 !important;
-        }
-
-        .pdf-valor-neutro {
-            color: #475569 !important;
-            font-weight: 800 !important;
-            background: rgb(255, 255, 255) !important;
-            margin: 10px;
-            padding: 6px 10px !important;
-            border-radius: 6px !important;
-            display: inline-block !important;
-        }
-
-        /* Alerta de Vencimento Destacado */
-        #pdf_alerta_vencimento {
-            margin-top: 25px !important;
-            padding: 18px !important;
-            border-radius: 8px !important;
-            font-size: 0.95rem !important;
-            font-weight: 800 !important;
-            text-align: center !important;
-        }
-
-        #pdf_alerta_vencimento.pdf-valor-atrasado {
-            background: #fef2f2 !important;
-            border: 2px dashed #f87171 !important;
-            color: #b91c1c !important;
-            display: block !important;
-        }
-
-        #pdf_alerta_vencimento:not(.pdf-valor-atrasado) {
-            background: #f8fafc !important;
-            border: 1px solid #cbd5e1 !important;
-            color: #475569 !important;
-        }
-
+        /* Alerta de Vencimento */
+        #pdf_alerta_vencimento { padding: 15px !important; border-radius: 8px !important; font-size: 0.9rem !important; font-weight: 800 !important; text-align: center !important; margin-bottom: 25px !important; display: none; }
+        #pdf_alerta_vencimento:not(:empty) { display: block !important; }
+        #pdf_alerta_vencimento.pdf-valor-atrasado { background: #fef2f2 !important; border: 2px dashed #f87171 !important; color: #b91c1c !important; }
+        #pdf_alerta_vencimento:not(.pdf-valor-atrasado) { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #475569 !important; }
 
         /* --- MODAIS E FORMULÁRIOS --- */
         .modal {
@@ -897,6 +852,12 @@
                 gap: 10px;
             }
         }
+
+        #dash_lista_produtos td,
+        #dash_lista_produtos tr {
+            border: none !important;
+            border-bottom: none !important;
+        }
     </style>
 
 </head>
@@ -976,17 +937,17 @@
             </div>
 
             <div class="dash-grid-top" style="gap: 15px; margin-bottom: 15px;">
-                <div class="dash-metric-card" style="padding: 15px;">
-                    <span class="dash-metric-title" style="font-size: 0.7rem;">Faturamento</span>
+                <div class="dash-metric-card" style=" text-align: center ;padding: 15px;box-shadow: var(--neu-btn); border-radius: 20px;">
+                    <span class="dash-metric-title" style="font-size: 1.2rem; margin-right: 10px;">Faturamento</span>
                     <span class="dash-metric-value" id="dash_faturamento"
                         style="font-size: 1.5rem; color: var(--success);">R$ 0,00</span>
                 </div>
-                <div class="dash-metric-card" style="padding: 15px;">
-                    <span class="dash-metric-title" style="font-size: 0.7rem;">Lucro Líquido</span>
+                <div class="dash-metric-card" style=" text-align: center ;padding: 15px;box-shadow: var(--neu-btn); border-radius: 20px;">
+                    <span class="dash-metric-title" style="font-size: 1.2rem;margin-right: 10px;">Lucro Líquido</span>
                     <span class="dash-metric-value" id="dash_lucro" style="font-size: 1.5rem;">R$ 0,00</span>
                 </div>
-                <div class="dash-metric-card" style="padding: 15px;">
-                    <span class="dash-metric-title" style="font-size: 0.7rem;">A Receber</span>
+                <div class="dash-metric-card" style=" text-align: center ;padding: 15px;box-shadow: var(--neu-btn); border-radius: 20px;">
+                    <span class="dash-metric-title" style="font-size: 1.2rem;margin-right: 10px;">A Receber</span>
                     <span class="dash-metric-value" id="dash_receber"
                         style="font-size: 1.5rem; color: var(--warning);">R$ 0,00</span>
                 </div>
@@ -996,30 +957,33 @@
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-chart-line"></i> Vendas
                         Diárias</h3>
-                    <div style="position: relative; height: 220px; width: 100%; padding: 10px; box-shadow: var(--neu-btn); border-radius: 10px;">
+                    <div
+                        style="position: relative; height: 264px; width: 100%; padding: 10px; box-shadow: var(--neu-btn); border-radius: 20px;">
                         <canvas id="chartFaturamento"></canvas>
                     </div>
                 </div>
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i>
                         Radar</h3>
-                    <div id="dash_lista_cobranca" style="max-height: 200px; overflow-y: auto; font-size: 0.85rem;">
+                    <div id="dash_lista_cobranca" style="max-height: 264px; overflow-y: auto; font-size: 0.85rem;">
                     </div>
                 </div>
             </div>
 
-            <div class="dash-grid-main" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="dash-grid-main" style="grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-crown"></i> Top Clientes
                     </h3>
-                    <div style="position: relative; height: 180px; width: 100%; padding: 10px; box-shadow: var(--neu-btn); border-radius: 10px;">
+                    <div
+                        style="position: relative; height: 200px; width: 100%; padding: 10px; box-shadow: var(--neu-btn); border-radius: 20px;">
                         <canvas id="chartTopClientes"></canvas>
                     </div>
                 </div>
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-fire"></i> Mais Vendidos
                     </h3>
-                    <table style="font-size: 0.8rem; box-shadow: var(--neu-btn); border-radius: 10px;">
+                    <table
+                        style="font-size: 0.8rem; text-shadow: 1px 1px 5px #91acac ; box-shadow: var(--neu-btn); border-radius: 20px;">
                         <tbody id="dash_lista_produtos"></tbody>
                     </table>
                 </div>
@@ -1436,62 +1400,73 @@
     </div>
 
     <div id="modalPDF" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="padding: 30px 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: var(--text-main); font-weight: 800;">Recibo Inteligente</h3>
+                <h3 style="color: var(--text-main); font-weight: 800; margin: 0;">Recibo Inteligente</h3>
                 <button class="btn-action"
-                    style="background: #25D366; color: white; border-radius: 8px; border: none; box-shadow: 0 4px 10px rgba(37,211,102,0.3);"
-                    onclick="compartilharPDF()"><i class="fa-solid fa-share-nodes"></i> Enviar WhatsApp</button>
+                    style="background: #25D366; color: white; border-radius: 8px; border: none; box-shadow: 0 4px 10px rgba(37,211,102,0.3); padding: 10px 15px;"
+                    onclick="compartilharPDF()">
+                    <i class="fa-solid fa-share-nodes"></i> WhatsApp
+                </button>
             </div>
 
-            <div id="pdf-wrapper" class="pdf-wrapper">
-                <div class="pdf-header">
-                    <div>
-                        <h2>Recibo de Compra</h2>
-                        <span style="font-size: 0.85rem; color: #666 !important; font-weight: 600;">O Boticário</span>
-                    </div>
-                    <div class="pdf-header-info">
-                        <span>Cliente</span>
-                        <strong id="pdf_cliente">Nome</strong>
-                        <div style="font-size: 0.8rem; color: #666 !important; margin-top: 5px;">Caixa #<span
-                                id="pdf_cod_pedido">000</span></div>
-                    </div>
-                </div>
+            <div style="width: 100%; max-width: 100%; overflow-x: auto; border-radius: 8px; box-shadow: var(--neu-in); box-sizing: border-box;">
+                <div id="pdf-wrapper" class="pdf-wrapper" style="width: 100%; max-width: 100%;">
 
-                <div class="pdf-stats">
-                    <div class="pdf-stats-box"><span>Itens</span><strong id="pdf_qtd" style="margin: 5px;">0</strong></div>
-                    <div class="pdf-stats-box"><span>Valor Total</span><strong id="pdf_total" style="margin: 5px;">R$ 0,00</strong></div>
-                    <div style="display: flex; border-radius: 10px; background-color: #f0f5f7; margin-top: 10px;padding-left: 10px; align-items: center; box-shadow: var(--neu-btn);">
-                        <div class="pdf-stats-box"><span>1ª Parcela <span id="pdf_d1_min"
-                                style="display:inline; font-size:0.65rem;"></span></span><strong id="pdf_p1">--</strong>
+                    <div class="pdf-header">
+                        <div class="pdf-brand">
+                            <h2>Recibo de Compra</h2>
+                            <span>O Boticário</span>
                         </div>
-                        <div class="pdf-stats-box"><span>2ª Parcela <span id="pdf_d2_min"
-                                style="display:inline; font-size:0.65rem;"></span></span><strong id="pdf_p2">--</strong>
+                        <div class="pdf-header-info">
+                            <span>Cliente</span>
+                            <strong id="pdf_cliente">Nome do Cliente</strong>
+                            <div class="pdf-caixa-ref">Caixa #<span id="pdf_cod_pedido">000</span></div>
                         </div>
                     </div>
-                </div>
 
-                <div id="pdf_alerta_vencimento"
-                    style="text-align: center; font-size: 0.9rem; font-weight: 800; margin-bottom: 20px;"></div>
+                    <div class="pdf-stats">
+                        <div class="pdf-stats-box">
+                            <span>Qtd. Itens</span>
+                            <strong id="pdf_qtd">0</strong>
+                        </div>
+                        <div class="pdf-stats-box">
+                            <span>Valor Total</span>
+                            <strong id="pdf_total">R$ 0,00</strong>
+                        </div>
+                        <div class="pdf-stats-box">
+                            <span>1ª Parcela <small id="pdf_d1_min"></small></span>
+                            <strong id="pdf_p1">--</strong>
+                        </div>
+                        <div class="pdf-stats-box">
+                            <span>2ª Parcela <small id="pdf_d2_min"></small></span>
+                            <strong id="pdf_p2">--</strong>
+                        </div>
+                    </div>
 
-                <table class="pdf-table">
-                    <thead>
-                        <tr>
-                            <th>Cód</th>
-                            <th>Produto</th>
-                            <th>Valor</th>
-                            <th>Condição</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pdf_tabela_itens"></tbody>
-                </table>
+                    <div id="pdf_alerta_vencimento"></div>
 
-                <div class="pdf-footer">
-                    <strong>Data de Entrega: </strong><span id="pdf_data_entrega">00/00/0000</span><br><br>
-                    <span style="font-size: 0.75rem;">A partir da data de vencimento multa de R$5.93 e juros de R$0.89
-                        ao dia a contar da data de vencimento</span>
+                    <table class="pdf-table">
+                        <thead>
+                            <tr>
+                                <th>Cód</th>
+                                <th>Produto</th>
+                                <th>Valor</th>
+                                <th>Condição</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdf_tabela_itens"></tbody>
+                    </table>
+
+                    <div class="pdf-footer">
+                        <strong>Data de Entrega: <span id="pdf_data_entrega"
+                                style="font-weight: 500;">00/00/0000</span></strong>
+                        <p>A partir da data de vencimento incidirá multa de R$ 5,93 e juros de R$ 0,89 ao dia.</p>
+                    </div>
+
                 </div>
             </div>
+
             <button class="btn-action btn-outline" style="width: 100%; margin-top: 25px;"
                 onclick="fecharModal('modalPDF')">Fechar Documento</button>
         </div>
@@ -1774,7 +1749,7 @@
 
                 const htmlProd = document.getElementById('dash_lista_produtos'); htmlProd.innerHTML = '';
                 Object.keys(rankingProdutos).map(k => ({ n: k, q: rankingProdutos[k].qtd })).sort((a, b) => b.q - a.q).slice(0, 4).forEach((p, i) => {
-                    htmlProd.innerHTML += `<tr><td style="padding:5px 0;">${i + 1}. ${p.n.substring(0, 20)}</td><td style="text-align:right; font-weight:800; color:var(--primary-light);">${p.q}</td></tr>`;
+                    htmlProd.innerHTML += `<tr><td style="padding:1px 0; padding-left: 15px;">${i + 1}. ${p.n.substring(0, 20)}</td><td style="text-align:left; font-weight:800; color:var(--primary-light);">${p.q}</td></tr>`;
                 });
 
             } catch (error) {
@@ -2523,7 +2498,7 @@
             snap.forEach(d => {
                 const p = d.data(); produtosCache.set(d.id, p);
                 datalist.innerHTML += `<option value="${d.id} - ${p.item}">Custo Base: R$ ${p.valor_real.toFixed(2)}</option>`;
-                if (tbody) tbody.innerHTML += `<tr><td>${d.id}</td><td>${p.item}</td><td style="color:var(--success);">R$ ${p.valor_real.toFixed(2)}</td></tr>`;
+                if (tbody) tbody.innerHTML += `<tr><td style=" font-weight:bold ;">${d.id}</td><td style="color: #7094b8 ;font-weight:bold ;">${p.item}</td><td style=" font-weight:bold;color:#7094b8;">R$ ${p.valor_real.toFixed(2)}</td></tr>`;
             });
         }
 
