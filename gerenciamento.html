@@ -15,122 +15,137 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* =========================================
+       CORE SYSTEM: NEUMORPHISM (MOLDE EXATO)
+       ========================================= */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap');
+
         :root {
-            --primary: #008080;
-            --primary-light: #2eb8b8;
-            --primary-dark: #004c4c;
-            --danger: #ff4757;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            --bg: #e0e5ec;
+            --surface: #e0e5ec;
+            --bg-card: #e0e5ec;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --primary: #0984e3;
+            --primary-light: #74b9ff;
+
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fca311;
+            --border: #a3b1c6;
+
+            --shadow-light: #ffffff;
+            --shadow-dark: #a3b1c6;
+            --neu-out: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            --neu-in: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+            --neu-btn: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-btn-active: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --transition: all 0.3s var(--spring);
         }
 
-        [data-theme="light"] {
-            --bg-body: #dadada59;
-            --bg-card: #ffffff;
-            --text-main: #1a1a1a;
-            --text-muted: #666;
-            --border: #d1dbdb;
-            --shadow: 13px 12px 35px rgba(76, 83, 83, 0.11);
-            --surface: #e8eeee;
-            --hover-bg: rgba(0, 128, 128, 0.05);
+        [data-theme="dark"],
+        body[data-theme="dark"] {
+            --bg: #2b2e33;
+            --surface: #2b2e33;
+            --bg-card: #2b2e33;
+            --text-main: #f1f2f6;
+            --text-muted: #a4b0be;
+            --primary: #74b9ff;
+            --primary-light: #0984e3;
+            --border: #202226;
+            --shadow-light: #363a40;
+            --shadow-dark: #202226;
         }
 
-        [data-theme="dark"] {
-            --bg-body: #060909;
-            --bg-card: #121616;
-            --text-main: #e8eeee;
-            --text-muted: #8a9999;
-            --border: #1a2424;
-            --shadow: 13px 15px 20px rgba(15, 37, 36, 0.6);
-            --surface: #181d1d;
-            --hover-bg: rgba(0, 128, 128, 0.1);
+        /* --- GLOBAL E SCROLLBAR --- */
+        ::-webkit-scrollbar {
+            display: none !important;
         }
 
         * {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-body);
+            background-color: var(--bg);
             color: var(--text-main);
-            display: flex;
             overflow-x: hidden;
-            transition: background-color var(--transition), color var(--transition);
+            min-height: 100vh;
         }
 
-        body[data-lite="true"] * {
+        /* --- MODO DESEMPENHO --- */
+        [data-lite="true"] * {
+            animation: none !important;
             transition: none !important;
-            animation-duration: 0.001s !important;
-            box-shadow: none !important;
-            transform: none !important;
         }
 
-        body[data-lite="true"] #anim-overlay * {
-            transition: all 1.2s ease !important;
-            animation-duration: 1.5s !important;
-            transform: unset !important;
+        [data-lite="true"] .dash-metric-box,
+        [data-lite="true"] .chart-block,
+        [data-lite="true"] .card-box {
+            box-shadow: 0 0 0 1px var(--border) !important;
         }
 
-        /* --- SIDEBAR PREMIUM (Floating Glass) --- */
+        /* --- SIDEBAR --- */
         nav.sidebar {
             position: fixed;
             top: 20px;
             left: 20px;
             bottom: 20px;
-            width: 80px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            width: 88px;
+            background: var(--bg);
+            box-shadow: var(--neu-out);
+            border-radius: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 25px 0;
-            z-index: 50;
+            padding: 30px 0;
+            z-index: 9999;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: width 0.4s var(--spring);
         }
 
         nav.sidebar:hover {
-            width: 260px;
+            width: 280px;
             align-items: flex-start;
             padding-left: 20px;
-            box-shadow: 0 20px 40px rgba(0, 128, 128, 0.15);
         }
 
         .brand-logo {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 14px;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            flex-shrink: 0;
+            background: var(--bg);
+            box-shadow: var(--neu-btn);
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 35px;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 128, 128, 0.4);
-            flex-shrink: 0;
+            font-size: 1.5rem;
         }
 
         nav.sidebar:hover .brand-logo {
             width: calc(100% - 20px);
             justify-content: flex-start;
             padding-left: 15px;
+            box-shadow: var(--neu-in);
         }
 
         .brand-logo span {
             display: none;
-            margin-left: 12px;
+            margin-left: 15px;
             font-size: 1.1rem;
-            letter-spacing: 1px;
-            color: white;
+            font-weight: 800;
+            color: var(--text-main);
         }
 
         nav.sidebar:hover .brand-logo span {
@@ -138,956 +153,748 @@
         }
 
         .nav-item {
-            width: calc(100% - 20px);
-            margin: 0 auto 8px auto;
-            padding: 14px 0;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+            border-radius: 16px;
             color: var(--text-muted);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            border-radius: 12px;
-            position: relative;
+            transition: var(--transition);
         }
 
         nav.sidebar:hover .nav-item {
             width: calc(100% - 20px);
             justify-content: flex-start;
             padding-left: 15px;
-            margin-left: 0;
         }
 
         .nav-item i {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             min-width: 40px;
             text-align: center;
-            transition: 0.3s;
         }
 
         .nav-item span {
             display: none;
             font-weight: 600;
             font-size: 0.95rem;
-            white-space: nowrap;
         }
 
         nav.sidebar:hover .nav-item span {
             display: block;
         }
 
-        /* Indicador de Página Ativa */
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
         .nav-item.active {
-            background: var(--surface);
-            color: var(--primary-light);
-            box-shadow: inset 4px 0 0 var(--primary-light);
-        }
-
-        .nav-item.active i {
-            transform: scale(1.1);
-        }
-
-        .nav-item:hover:not(.active) {
-            background: rgba(0, 128, 128, 0.05);
-            color: var(--text-main);
-            transform: translateX(4px);
+            box-shadow: var(--neu-in);
+            color: var(--primary);
         }
 
         .sys-toggles {
             margin-top: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
             align-items: center;
-            padding: 0 10px;
         }
 
         nav.sidebar:hover .sys-toggles {
             align-items: flex-start;
-            padding: 0;
             width: calc(100% - 20px);
         }
 
         .theme-toggle {
-            background: transparent;
-            border: 1px solid transparent;
+            background: var(--bg);
+            border: none;
             color: var(--text-muted);
             cursor: pointer;
-            padding: 12px 0;
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
             font-size: 1.1rem;
-            transition: 0.3s;
+            box-shadow: var(--neu-btn);
             display: flex;
             align-items: center;
-            width: 100%;
             justify-content: center;
+            transition: 0.2s;
+        }
+
+        .theme-toggle:active {
+            box-shadow: var(--neu-btn-active);
         }
 
         nav.sidebar:hover .theme-toggle {
+            width: 100%;
             justify-content: flex-start;
             padding-left: 15px;
-            border-color: var(--border);
-            background: var(--bg-body);
+        }
+
+        .theme-toggle i {
+            min-width: 20px;
+            text-align: center;
+            flex-shrink: 0;
         }
 
         .theme-toggle span {
             display: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-left: 15px;
             white-space: nowrap;
+            margin-left: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
         nav.sidebar:hover .theme-toggle span {
             display: block;
         }
 
-        .theme-toggle:hover {
-            color: var(--primary-light);
-            background: var(--surface);
-            border-color: transparent;
-        }
-
-        /* Ajuste do Main Container para respeitar a Sidebar Flutuante */
+        /* --- LAYOUT --- */
         main.container {
-            margin-left: 120px;
+            margin-left: 130px;
             padding: 40px;
-            width: calc(100% - 120px);
-            transition: var(--transition);
+            width: calc(100% - 130px);
             min-height: 100vh;
-        }
-
-        nav.sidebar:hover~main.container {
-            opacity: 0.6;
-            filter: blur(2px);
-            pointer-events: none;
-            transform: scale(0.99);
+            transition: var(--transition);
         }
 
         .page {
             display: none;
+            animation: slideUpFade 0.4s var(--spring);
         }
 
         .page.active {
-            display: block;
-            animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: block !important;
         }
 
-        @keyframes fadeIn {
-            from {
+        @keyframes slideUpFade {
+            0% {
                 opacity: 0;
-                transform: translateY(15px);
+                transform: translateY(20px);
             }
 
-            to {
+            100% {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .btn-action {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 128, 128, 0.3);
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 128, 128, 0.5);
-            filter: brightness(1.1);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--border);
-            color: var(--text-main);
-            box-shadow: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            border-radius: 10px;
-            padding: 12px 24px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: var(--surface);
-            border-color: var(--primary);
-            color: var(--primary-light);
-        }
-
-        .btn-remove {
-            background: rgba(255, 71, 87, 0.1);
-            color: var(--danger);
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 600;
-        }
-
-        .btn-remove:hover {
-            background: var(--danger);
-            color: white;
-        }
-
         .header-flex {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 40px;
-        }
-
-        .header-flex h2 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        table {
+            align-items: center;
+            margin-bottom: 30px;
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: var(--bg-card);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
         }
 
-        th,
-        td {
-            padding: 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
-        }
-
-        th {
-            background: var(--surface);
-            color: var(--primary-light);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1.5px;
-            font-weight: 800;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* Cards Premium UI */
-        .cards-grid {
-            display: grid;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .card-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 22px;
-            transition: all 0.3s ease;
+        .header-actions {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-        }
-
-        .card-box.interactive {
-            cursor: pointer;
-            box-shadow: 15px 15px 15px #8585855e;
-        }
-
-        .card-box.interactive:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary-light);
-            box-shadow: 0 12px 25px rgba(0, 128, 128, 0.12);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text-main);
-            display: flex;
+            gap: 15px;
             align-items: center;
-            gap: 8px;
+            margin-left: auto;
         }
 
-        .card-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge {
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-block;
-        }
-
-        .badge-alert {
-            background: rgba(255, 71, 87, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(255, 71, 87, 0.2);
-        }
-
-        .badge-safe {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: var(--surface);
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .info-row strong {
-            color: var(--text-main);
-            font-size: 0.95rem;
-            font-weight: 800;
-        }
-
-        .card-footer {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-            padding-top: 5px;
-        }
-
-        /* Dashboard Specifics */
+        /* --- DASHBOARD --- */
         .dash-grid-top {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            margin-bottom: 30px;
         }
 
-        .dash-metric-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: var(--shadow);
+        .dash-grid-main {
+            display: grid;
+            gap: 25px;
+            grid-template-columns: 2fr 1fr;
+            margin-bottom: 30px;
+        }
+
+        .dash-metric-box,
+        .chart-block,
+        .glass-panel {
+            background: var(--bg);
+            box-shadow: var(--neu-out);
+            border-radius: 24px;
+            padding: 30px;
+            border: none;
+        }
+
+        .chart-block {
+            min-height: 420px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .chart-block h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .chart-block canvas {
+            flex-grow: 1;
+            max-height: 320px !important;
         }
 
         .dash-metric-title {
             font-size: 0.85rem;
             text-transform: uppercase;
             font-weight: 800;
+            margin-bottom: 15px;
             color: var(--text-muted);
-            margin-bottom: 10px;
-            letter-spacing: 1px;
         }
 
         .dash-metric-value {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--primary);
         }
 
-        .dash-grid-main {
-            display: grid;
-            grid-template-columns: 2fr 1.2fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        /* =======================================================
+       RADAR DE COBRANÇA (ESMAGANDO O JS INLINE)
+       ======================================================= */
+        #dash_lista_cobranca {
+            padding-right: 20px;
+            margin-top: 15px;
         }
 
-        .dash-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-        }
-
-        .dash-panel h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--primary-light);
-        }
-
+        /* Forçando a estrutura da caixa */
         .alert-item {
+            background: var(--bg) !important;
+            box-shadow: 8px 8px 16px var(--shadow-dark);
+            border: none !important;
+            /* Remove a linha cinza do JS */
+            border-radius: 16px !important;
+            padding: 15px 20px !important;
+            /* Espaçamento mais gordo */
+            margin-bottom: 18px !important;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-            transition: 0.3s;
-        }
-
-        .alert-item:last-child {
-            border-bottom: none;
+            transition: var(--transition);
         }
 
         .alert-item:hover {
-            background: var(--surface);
-            border-radius: 8px;
+            box-shadow: var(--neu-in) !important;
+            transform: scale(0.98) !important;
         }
 
-        .alert-info {
+        /* Botão do WhatsApp Neumórfico */
+        .alert-item button {
+            background: var(--bg) !important;
+            box-shadow: var(--neu-btn) !important;
+            color: #25D366 !important;
+            /* A cor do zap vai pro ícone */
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 10px 14px !important;
+            margin-left: 15px !important;
+            transition: 0.2s !important;
+        }
+
+        .alert-item button:active {
+            box-shadow: var(--neu-btn-active) !important;
+        }
+
+        .alert-item button i {
+            font-size: 1.2rem !important;
+        }
+
+        /* =======================================================
+       CARDS GERAIS (Vendas, Pedidos, Clientes)
+       ======================================================= */
+        #grid-vendas-agrupadas,
+        #grid-pedidos,
+        #grid-clientes,
+        .cards-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .card-box {
+            background: var(--bg);
+            box-shadow: var(--neu-out);
+            border-radius: 24px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            transition: 0.3s;
         }
 
-        .alert-name {
+        .card-box.interactive {
+            cursor: pointer;
+        }
+
+        .card-box.interactive:hover {
+            box-shadow: var(--neu-in);
+            transform: scale(0.98);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
             font-weight: 800;
-            font-size: 0.95rem;
             color: var(--text-main);
+            display: block;
         }
 
-        .alert-val {
-            font-size: 0.8rem;
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-safe {
+            background: rgba(0, 184, 148, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(252, 163, 17, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-alert {
+            background: rgba(214, 48, 49, 0.1);
+            color: var(--danger);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+            font-size: 0.95rem;
             color: var(--text-muted);
         }
 
+        [data-theme="dark"] .info-row {
+            border-bottom-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .info-row span {
+            font-weight: 600;
+        }
+
+        .info-row strong {
+            color: var(--text-main);
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 15px;
+            width: 100%;
+        }
+
+        .card-footer button,
+        .card-box button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 12px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            background: var(--bg);
+            box-shadow: var(--neu-btn);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .card-footer button:active,
+        .card-box button:active {
+            box-shadow: var(--neu-btn-active);
+        }
+
+        .card-footer .btn-action {
+            color: var(--primary);
+        }
+
+        /* =======================================================
+       O RECIBO PDF (FORÇA BRUTA BRANCA E DE ALTO CONTRASTE)
+       ======================================================= */
+        #pdf-wrapper {
+            background: #ffffff !important;
+            /* Força branco absoluto sempre */
+            color: #0f172a !important;
+            /* Texto chumbo escuro, quase preto */
+            padding: 40px !important;
+            border-radius: 0px !important;
+            /* Recibos não têm borda arredondada na impressão */
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            box-shadow: var(--bg-card) !important;
+        }
+
+        #pdf-wrapper h2 {
+            color: #020617 !important;
+            border-bottom: 3px solid #cbd5e1 !important;
+            padding-bottom: 15px !important;
+            margin-bottom: 25px !important;
+            font-size: 1.8rem !important;
+            font-weight: 800 !important;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #pdf-wrapper p {
+            font-size: 1rem !important;
+            margin-bottom: 8px !important;
+            color: #334155 !important;
+        }
+
+        #pdf-wrapper strong {
+            color: #020617 !important;
+            font-weight: 800 !important;
+        }
+
+        /* Tabela do PDF */
+        #pdf-wrapper table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-top: 25px !important;
+            margin-bottom: 25px !important;
+        }
+
+        #pdf-wrapper th {
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            font-weight: 800 !important;
+            text-transform: uppercase;
+            font-size: 0.8rem !important;
+            padding: 14px 15px !important;
+            border-bottom: 2px solid #94a3b8 !important;
+            text-align: left !important;
+        }
+
+        #pdf-wrapper td {
+            padding: 14px 15px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            font-size: 0.95rem !important;
+            color: #1e293b !important;
+        }
+
+        /* Efeito zebrado na tabela do PDF */
+        #pdf-wrapper tr:nth-child(even) td {
+            background: #f8fafc !important;
+        }
+
+        /* Badges de Status injetados pelo JS no PDF */
+        .pdf-valor-ok {
+            color: #166534 !important;
+            font-weight: 800 !important;
+            background: #dcfce7 !important;
+            padding: 6px 10px !important;
+            margin: 10px;
+            margin: 6px;
+            border-radius: 6px !important;
+            display: inline-block !important;
+        }
+
+        .pdf-valor-atrasado {
+            color: #991b1b !important;
+            font-weight: 800 !important;
+            background: #fee2e2 !important;
+            margin: 10px;
+            padding: 6px 10px !important;
+            border-radius: 6px !important;
+            display: inline-block !important;
+            border: 1px solid #fca5a5 !important;
+        }
+
+        .pdf-valor-neutro {
+            color: #475569 !important;
+            font-weight: 800 !important;
+            background: rgb(255, 255, 255) !important;
+            margin: 10px;
+            padding: 6px 10px !important;
+            border-radius: 6px !important;
+            display: inline-block !important;
+        }
+
+        /* Alerta de Vencimento Destacado */
+        #pdf_alerta_vencimento {
+            margin-top: 25px !important;
+            padding: 18px !important;
+            border-radius: 8px !important;
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+            text-align: center !important;
+        }
+
+        #pdf_alerta_vencimento.pdf-valor-atrasado {
+            background: #fef2f2 !important;
+            border: 2px dashed #f87171 !important;
+            color: #b91c1c !important;
+            display: block !important;
+        }
+
+        #pdf_alerta_vencimento:not(.pdf-valor-atrasado) {
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #475569 !important;
+        }
+
+
+        /* --- MODAIS E FORMULÁRIOS --- */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 20px;
-            z-index: 1000;
-            overflow-y: auto;
-            align-items: flex-start;
-        }
-
-        .modal[style*="display: flex"] {
-            animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        @keyframes popIn {
-            from {
-                transform: scale(0.95) translateY(20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-content {
-            background: var(--bg-card);
+            background: var(--bg);
+            width: 95%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 24px;
             padding: 40px;
-            border-radius: 20px;
-            width: 100%;
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            position: relative;
-            margin: 40px auto;
+            box-shadow: var(--neu-out);
+            transform: scale(0.95);
+            animation: popUp 0.3s var(--spring) forwards;
         }
 
-        #modalPedidoMaster .modal-content {
-            max-width: 900px;
+        @keyframes popUp {
+            to {
+                transform: scale(1);
+            }
         }
 
-        #modalCarrinhoCliente .modal-content {
-            max-width: 950px;
-        }
-
-        #modalAlocacaoPDF .modal-content {
-            max-width: 1200px;
-        }
-
-        #modalDetalhePedido .modal-content,
-        #modalVisVenda .modal-content,
-        #modalVisCliente .modal-content {
-            max-width: 650px;
-        }
-
-        #modalEdicaoVenda .modal-content,
-        #modalAddPagamento .modal-content,
-        #modalEditPagamento .modal-content {
-            max-width: 800px;
-        }
-
-        #modalPDF .modal-content {
-            max-width: 800px;
-            background: #fff;
-            color: #000;
-            padding: 20px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full {
-            grid-column: span 2;
-        }
-
-        label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
+        .modal-content h2,
+        .modal-content h3 {
+            font-size: 1.4rem;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 25px;
+            color: var(--text-main);
+            text-align: center;
         }
 
+        .modal-content p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .modal-content input,
+        .modal-content select,
         input,
         select {
-            padding: 14px;
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: var(--bg);
+            box-shadow: var(--neu-in);
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
             color: var(--text-main);
-            border-radius: 10px;
+            margin-bottom: 20px;
             outline: none;
             font-size: 0.95rem;
-            transition: 0.3s;
+            font-weight: 600;
         }
 
+        .modal-content input:focus,
+        .modal-content select:focus,
         input:focus,
         select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
-            background: var(--bg-card);
+            box-shadow: inset 7px 7px 14px var(--shadow-dark), inset -7px -7px 14px var(--shadow-light);
         }
 
-        input[readonly],
-        select[readonly] {
-            opacity: 0.6;
-            cursor: not-allowed;
-            border: 1px dashed var(--border);
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        input:not([readonly]).editable-active {
-            border: 2px solid var(--primary-light);
-            background: var(--bg-card);
-            box-shadow: 0 0 10px rgba(0, 128, 128, 0.2);
-        }
-
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--surface);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .checkbox-wrapper input {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
-        .produto-row {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr 1fr auto;
-            gap: 12px;
-            align-items: end;
-            background: var(--surface);
-            padding: 20px;
+        .modal-content button {
+            background: var(--bg);
+            color: var(--primary);
+            box-shadow: var(--neu-btn);
+            border: none;
+            padding: 14px 20px;
             border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 15px;
+            transition: 0.2s;
         }
 
-        .alocacao-row {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr 1fr 1fr auto auto;
+        .modal-content button:active {
+            box-shadow: var(--neu-btn-active);
+        }
+
+        .modal-content .btn-remove {
+            color: var(--danger);
+        }
+
+        /* --- BOTÕES GERAIS DO TOPO --- */
+        .btn-action,
+        .btn-outline {
+            background: var(--bg);
+            color: var(--text-main);
+            box-shadow: var(--neu-btn);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
             gap: 10px;
             align-items: center;
-            background: var(--surface);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            margin-bottom: 10px;
+        }
+
+        .btn-action {
+            color: var(--primary);
+        }
+
+        .btn-action:active,
+        .btn-outline:active {
+            box-shadow: var(--neu-btn-active);
+        }
+
+        /* --- TABELAS --- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 24px;
+            background: var(--bg);
+            box-shadow: var(--neu-out);
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
             font-size: 0.9rem;
         }
 
-        .alocacao-row input,
-        .alocacao-row select {
-            padding: 8px;
-            font-size: 0.85rem;
-        }
-
-        .alocacao-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .alocacao-info strong {
-            color: var(--primary-light);
-        }
-
-        .alocacao-info span {
-            font-size: 0.75rem;
+        th {
+            font-weight: 800;
             color: var(--text-muted);
-        }
-
-        .mem-table {
-            background: var(--surface);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            padding: 20px;
-            margin-bottom: 25px;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-
-        /* Animações Cinematográficas */
-        #anim-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--bg-body);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease, background 0.4s ease;
-        }
-
-        .anim-container {
-            position: relative;
-            width: 250px;
-            height: 350px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* PDF PREMIUM LAYOUT (Blindado contra Dark Mode) */
-        .pdf-wrapper {
-            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-            padding: 40px;
-            background: #ffffff !important;
-        }
-
-        .pdf-wrapper * {
-            background-color: transparent !important;
-        }
-
-        /* Limpa as transparências do dark mode */
-
-        .pdf-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px solid #008080;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-
-        .pdf-header h2 {
-            margin: 0;
-            color: #008080 !important;
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .pdf-header-info {
-            text-align: right;
-        }
-
-        .pdf-header-info span {
-            display: block;
-            font-size: 0.8rem;
-            color: #666 !important;
             text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .pdf-header-info strong {
-            font-size: 1.2rem;
-            color: #000 !important;
-        }
-
-        .pdf-stats {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .pdf-stats-box {
-            flex: 1;
-            background: #f8fafc !important;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0 !important;
-            text-align: center;
-        }
-
-        .pdf-stats-box span {
-            display: block;
-            font-size: 0.7rem;
-            color: #64748b !important;
-            text-transform: uppercase;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .pdf-stats-box strong {
-            display: block;
-            font-size: 1.2rem;
-            color: #0f172a !important;
-        }
-
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-            background: #ffffff !important;
-        }
-
-        .pdf-table th {
-            border-bottom: 2px solid #008080 !important;
-            padding: 12px;
-            text-align: left;
             font-size: 0.75rem;
-            color: #008080 !important;
-            text-transform: uppercase;
-            font-weight: 800;
+            padding-bottom: 20px;
+            border-bottom-style: dashed;
         }
 
-        .pdf-table td {
-            padding: 12px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #e2e8f0 !important;
-            color: #1e293b !important;
-            background: #ffffff !important;
-        }
-
-        .pdf-footer {
-            text-align: center;
-            font-size: 0.85rem;
-            border-top: 1px dashed #cbd5e1 !important;
-            padding-top: 20px;
-            color: #64748b !important;
-        }
-
-        .pdf-footer strong {
-            color: #0f172a !important;
-        }
-
-        .pdf-valor-atrasado {
-            color: #ef4444 !important;
-            font-weight: 800;
-        }
-
-        .pdf-valor-ok {
-            color: #10b981 !important;
-            font-weight: 800;
-        }
-
-        .pdf-valor-neutro {
-            color: #0f172a !important;
-            font-weight: 800;
-        }
-
-        #loading_pdf {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: var(--primary-light);
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        @media (max-width: 1200px) {
-
-            .dash-grid-top,
-            .dash-grid-main {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* --- RESPONSIVIDADE & MOBILE ENGINE --- */
-
-        /* Botão Flutuante Mobile (Escondido por padrão no PC) */
+        /* --- RESPONSIVIDADE MOBILE --- */
         #mobile-menu-btn {
             display: none;
             position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 100;
-            background: var(--primary);
-            color: white;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: var(--bg);
+            box-shadow: var(--neu-btn);
             border: none;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            color: var(--primary);
         }
 
-        /* Ajustes para Celulares (Telas menores que 768px) */
         @media (max-width: 768px) {
             #mobile-menu-btn {
-                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
-            /* Joga a barra totalmente para fora da tela, já expandida */
             nav.sidebar {
-                width: 260px !important;
+                width: 280px !important;
                 left: -320px;
-                align-items: flex-start;
-                padding-left: 20px;
-                box-shadow: none;
+                top: 10px;
+                bottom: 10px;
+                padding: 40px 20px;
+                box-shadow: 20px 0 40px rgba(0, 0, 0, 0.1);
             }
 
-            /* Desliza a barra para dentro */
             nav.sidebar.mobile-open {
-                left: 15px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                left: 10px;
             }
 
-            /* Força a exibição dos textos, ignorando o comportamento de hover do PC */
-            nav.sidebar span,
-            .brand-logo span {
-                display: block !important;
-            }
-
-            .brand-logo {
-                width: calc(100% - 20px) !important;
-                justify-content: flex-start !important;
-                padding-left: 15px !important;
-            }
-
-            .nav-item {
-                justify-content: flex-start !important;
-                padding-left: 15px !important;
-                margin-left: 0 !important;
-                width: calc(100% - 20px) !important;
-            }
-
-            .sys-toggles {
-                align-items: flex-start !important;
-                padding: 0 !important;
-                width: calc(100% - 20px) !important;
-            }
-
-            .theme-toggle {
-                justify-content: flex-start !important;
-                padding-left: 15px !important;
-            }
-
-            /* Ajuste do Main Container */
             main.container {
                 margin-left: 0;
-                padding: 80px 15px 20px 15px;
-                /* Espaço para o botão hambúrguer */
+                padding: 90px 15px 30px 15px;
                 width: 100%;
             }
 
-            /* Anula o "blur" de fundo do hover do PC quando tocado no celular */
-            nav.sidebar:hover~main.container {
-                opacity: 1;
-                filter: none;
-                transform: none;
-                pointer-events: auto;
-            }
-
-            /* Dashboard Compacto */
-            .dash-grid-top {
-                grid-template-columns: 1fr;
-            }
-
+            .dash-grid-top,
             .dash-grid-main {
                 grid-template-columns: 1fr !important;
-            }
-
-            .dash-metric-value {
-                font-size: 1.5rem !important;
             }
 
             .header-flex {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 20px;
+            }
+
+            .header-actions {
+                margin-left: 0;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            nav.sidebar span,
+            .brand-logo span {
+                display: block !important;
+            }
+
+            .card-footer {
+                flex-direction: row;
                 gap: 10px;
-            }
-
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-
-            #menu-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 45;
-                backdrop-filter: blur(3px);
-            }
-
-            #menu-overlay.active {
-                display: block;
             }
         }
     </style>
@@ -1189,7 +996,7 @@
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-chart-line"></i> Vendas
                         Diárias</h3>
-                    <div style="position: relative; height: 220px; width: 100%;">
+                    <div style="position: relative; height: 220px; width: 100%; padding: 10px; box-shadow: var(--neu-btn); border-radius: 10px;">
                         <canvas id="chartFaturamento"></canvas>
                     </div>
                 </div>
@@ -1205,14 +1012,14 @@
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-crown"></i> Top Clientes
                     </h3>
-                    <div style="position: relative; height: 180px; width: 100%;">
+                    <div style="position: relative; height: 180px; width: 100%; padding: 10px; box-shadow: var(--neu-btn); border-radius: 10px;">
                         <canvas id="chartTopClientes"></canvas>
                     </div>
                 </div>
                 <div class="dash-panel" style="padding: 15px;">
                     <h3 style="font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-fire"></i> Mais Vendidos
                     </h3>
-                    <table style="font-size: 0.8rem; box-shadow: none;">
+                    <table style="font-size: 0.8rem; box-shadow: var(--neu-btn); border-radius: 10px;">
                         <tbody id="dash_lista_produtos"></tbody>
                     </table>
                 </div>
@@ -1652,13 +1459,15 @@
                 </div>
 
                 <div class="pdf-stats">
-                    <div class="pdf-stats-box"><span>Itens</span><strong id="pdf_qtd">0</strong></div>
-                    <div class="pdf-stats-box"><span>Valor Total</span><strong id="pdf_total">R$ 0,00</strong></div>
-                    <div class="pdf-stats-box"><span>1ª Parcela <span id="pdf_d1_min"
+                    <div class="pdf-stats-box"><span>Itens</span><strong id="pdf_qtd" style="margin: 5px;">0</strong></div>
+                    <div class="pdf-stats-box"><span>Valor Total</span><strong id="pdf_total" style="margin: 5px;">R$ 0,00</strong></div>
+                    <div style="display: flex; border-radius: 10px; background-color: #f0f5f7; margin-top: 10px;padding-left: 10px; align-items: center; box-shadow: var(--neu-btn);">
+                        <div class="pdf-stats-box"><span>1ª Parcela <span id="pdf_d1_min"
                                 style="display:inline; font-size:0.65rem;"></span></span><strong id="pdf_p1">--</strong>
-                    </div>
-                    <div class="pdf-stats-box"><span>2ª Parcela <span id="pdf_d2_min"
+                        </div>
+                        <div class="pdf-stats-box"><span>2ª Parcela <span id="pdf_d2_min"
                                 style="display:inline; font-size:0.65rem;"></span></span><strong id="pdf_p2">--</strong>
+                        </div>
                     </div>
                 </div>
 
@@ -1678,7 +1487,7 @@
                 </table>
 
                 <div class="pdf-footer">
-                    <strong>Data Prev. de Entrega: </strong><span id="pdf_data_entrega">00/00/0000</span><br><br>
+                    <strong>Data de Entrega: </strong><span id="pdf_data_entrega">00/00/0000</span><br><br>
                     <span style="font-size: 0.75rem;">A partir da data de vencimento multa de R$5.93 e juros de R$0.89
                         ao dia a contar da data de vencimento</span>
                 </div>
@@ -1922,10 +1731,23 @@
                 document.getElementById('dash_lucro').innerText = `R$ ${(totalRevenda - totalCusto).toFixed(2)}`;
                 document.getElementById('dash_receber').innerText = `R$ ${aReceberFiltrado.toFixed(2)}`;
 
+                // Renderiza Radar com Botão de Cobrança do WhatsApp
                 listaAlertas.sort((a, b) => a.dias - b.dias).slice(0, 6).forEach(a => {
-                    htmlAlertas.innerHTML += `<div class="alert-item" style="padding: 8px 0;"><div class="alert-info"><span class="alert-name" style="font-size:0.8rem;">${a.cliente}</span><span style="font-size:0.7rem; color:${a.atrasado ? 'var(--danger)' : 'var(--warning)'}">${a.texto}</span></div><strong style="font-size:0.8rem;">R$ ${a.val.toFixed(2)}</strong></div>`;
+                    const btnWpp = `<button onclick="cobrarWhatsApp('${a.cliente}', '${a.parcela}', ${a.val}, ${a.dias}, ${a.atrasado})" style="background: #25D366; color: white; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; margin-left: 12px; transition: 0.3s; box-shadow: 0 4px 10px rgba(37,211,102,0.2);"><i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i></button>`;
+
+                    htmlAlertas.innerHTML += `
+                    <div class="alert-item" style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                        <div class="alert-info" style="flex: 1;">
+                            <span class="alert-name" style="font-size: 0.85rem; display: block; font-weight: 800; color: var(--text-main);">${a.cliente}</span>
+                            <span style="font-size: 0.75rem; font-weight: 600; color: ${a.atrasado ? 'var(--danger)' : 'var(--warning)'}">${a.texto}</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <strong style="font-size: 0.9rem; color: var(--text-main);">R$ ${a.val.toFixed(2)}</strong>
+                            ${btnWpp}
+                        </div>
+                    </div>`;
                 });
-                
+
                 const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
                 if (chartLineInst) chartLineInst.destroy();
                 if (chartBarInst) chartBarInst.destroy();
@@ -3081,21 +2903,44 @@
         // --- TESTE DE CONEXÃO NTFY ---
         window.testarNotificacaoNTFY = () => {
             const topicoNTFY = "bto_cob_matheus";
-            
-            fetch(`https://ntfy.sh/${topicoNTFY}`, { 
-                method: 'POST', 
-                body: `Conexão bem-sucedida! Seu sistema BTO está enviando alertas para o seu iPhone corretamente.`, 
-                headers: { 
+
+            fetch(`https://ntfy.sh/${topicoNTFY}`, {
+                method: 'POST',
+                body: `Conexão bem-sucedida! Seu sistema BTO está enviando alertas para o seu iPhone corretamente.`,
+                headers: {
                     'Title': 'BTO System Conectado', // Emojis removidos para evitar erro de ISO-8859-1
                     'Tags': 'tada,white_check_mark', // O app renderiza os emojis a partir destas tags
                     'Priority': 'default'
-                } 
+                }
             }).then(() => {
                 alert("Sinal enviado! Veja se a notificação chegou no seu celular.");
             }).catch(e => {
                 console.error("Erro no envio:", e);
                 alert("Erro ao tentar enviar o sinal.");
             });
+        };
+
+        // --- MOTOR DE COBRANÇA 1-CLICK (WHATSAPP) ---
+        window.cobrarWhatsApp = (cliente, parcela, valorBase, dias, atrasado) => {
+            let texto = "";
+            valorBase = parseFloat(valorBase);
+
+            if (atrasado) {
+                const diasAtraso = Math.abs(dias);
+                const multa = 5.93;
+                const juros = diasAtraso * 0.89;
+                const valorAtualizado = valorBase + multa + juros;
+
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nConsta em meu sistema que a sua ${parcela} parcela do Boticário encontra-se em atraso.\n\n*Resumo atualizado:*\nValor original: R$ ${valorBase.toFixed(2)}\nMulta + Juros (${diasAtraso} dias): R$ ${(multa + juros).toFixed(2)}\n*Total a pagar: R$ ${valorAtualizado.toFixed(2)}*\n\nPodemos regularizar isso hoje? Qualquer dúvida, estou à disposição!`;
+            } else if (dias === 0) {
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nPassando para lembrar que a sua ${parcela} parcela do Boticário no valor de *R$ ${valorBase.toFixed(2)}* vence *HOJE*.\n\nQualquer dúvida, é só me chamar!`;
+            } else {
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nLembrete: a sua ${parcela} parcela do Boticário no valor de *R$ ${valorBase.toFixed(2)}* vencerá em ${dias} dias.\n\nQualquer dúvida, estou por aqui!`;
+            }
+
+            // Codifica o texto para o formato de link e abre o WhatsApp
+            const textoCodificado = encodeURIComponent(texto);
+            window.open(`https://api.whatsapp.com/send?text=${textoCodificado}`, '_blank');
         };
 
     </script>
