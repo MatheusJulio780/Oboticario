@@ -2565,15 +2565,23 @@
 
         // --- WHATSAPP COBRANÇA ---
         window.cobrarWhatsApp = (cliente, parcela, valorBase, dias, atrasado) => {
-            let texto = ""; valorBase = parseFloat(valorBase);
+            // IMPORTANTE: URL onde o seu site está hospedado no GitHub
+            const baseUrl = "https://SEUUSUARIO.github.io/SEUREPOSITORIO/cliente.html";
+            const linkCliente = `${baseUrl}?c=${cliente.replace(/ /g, '_')}`;
+
+            let texto = "";
+            valorBase = parseFloat(valorBase);
+
             if (atrasado) {
-                const diasAtraso = Math.abs(dias); const multa = 5.93; const juros = diasAtraso * 0.89; const valorAtualizado = valorBase + multa + juros;
-                texto = `Olá ${cliente}, tudo bem? 📦\n\nConsta em meu sistema que a sua ${parcela} parcela do Boticário encontra-se em atraso.\n\n*Resumo atualizado:*\nValor original: R$ ${valorBase.toFixed(2)}\nMulta + Juros (${diasAtraso} dias): R$ ${(multa + juros).toFixed(2)}\n*Total a pagar: R$ ${valorAtualizado.toFixed(2)}*\n\nPodemos regularizar isso hoje?`;
-            } else if (dias === 0) {
-                texto = `Olá ${cliente}, tudo bem? 📦\n\nPassando para lembrar que a sua ${parcela} parcela do Boticário no valor de *R$ ${valorBase.toFixed(2)}* vence *HOJE*.\n\nQualquer dúvida, é só me chamar!`;
+                const diasAtraso = Math.abs(dias);
+                const multa = 5.93;
+                const juros = diasAtraso * 0.89;
+                const valorAtualizado = valorBase + multa + juros;
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nConsta em meu sistema que a sua ${parcela} parcela do Boticário encontra-se em atraso.\n\n*Resumo atualizado:*\nValor original: R$ ${valorBase.toFixed(2)}\nMulta + Juros (${diasAtraso} dias): R$ ${(multa + juros).toFixed(2)}\n*Total a pagar: R$ ${valorAtualizado.toFixed(2)}*\n\nVocê pode consultar os detalhes da sua conta e baixar seus recibos aqui:\n${linkCliente}\n\nPodemos regularizar isso hoje?`;
             } else {
-                texto = `Olá ${cliente}, tudo bem? 📦\n\nLembrete: a sua ${parcela} parcela do Boticário no valor de *R$ ${valorBase.toFixed(2)}* vencerá em ${dias} dias.`;
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nPassando para lembrar que a sua ${parcela} parcela do Boticário no valor de *R$ ${valorBase.toFixed(2)}* vence em breve.\n\nConfira os detalhes e seus comprovantes no link abaixo:\n${linkCliente}`;
             }
+
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`, '_blank');
         };
 
