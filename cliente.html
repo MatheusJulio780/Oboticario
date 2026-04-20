@@ -521,20 +521,59 @@
                 setEl('pdf_tabela_itens', htmlTable);
                 document.getElementById('box_p3').style.display = maxParcelas === 3 ? 'flex' : 'none';
 
-                // Dispara o conversor HTML2PDF
-                const element = document.getElementById('pdf-wrapper');
-                document.getElementById('pdf-render').style.display = 'block'; // Fica visível para captura rápida
+                // =======================================================
+                // Dispara o conversor com Desbloqueio de Overflow
+                // =======================================================
+                const originalElement = document.getElementById('pdf-wrapper');
+                
+                // DESATIVA A GUILHOTINA DO CSS MOBILE (CRÍTICO)
+                document.body.style.overflowX = 'visible';
+                document.documentElement.style.overflowX = 'visible';
 
-                const opt = {
-                    margin: 0.2,
-                    filename: `Recibo_${cliente.replace(/ /g, "_")}_Caixa_${codPedido}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                const ghostContainer = document.createElement('div');
+                ghostContainer.style.position = 'absolute';
+                ghostContainer.style.top = '0';
+                ghostContainer.style.left = '0';
+                ghostContainer.style.width = '800px';
+                ghostContainer.style.zIndex = '-9999';
+                ghostContainer.style.backgroundColor = '#ffffff';
+
+                const clone = originalElement.cloneNode(true);
+                clone.style.width = '800px';
+                clone.style.maxWidth = '800px';
+                clone.style.margin = '0';
+                clone.style.padding = '30px';
+                clone.style.backgroundColor = '#ffffff';
+                clone.style.color = '#111111';
+                clone.style.boxSizing = 'border-box';
+                
+                ghostContainer.appendChild(clone);
+                document.body.appendChild(ghostContainer);
+                
+                const currentScrollY = window.scrollY;
+                window.scrollTo(0, 0);
+
+                const opt = { 
+                    margin: 0.2, 
+                    filename: `Recibo_${cliente.replace(/ /g, "_")}_Caixa_${codPedido}.pdf`, 
+                    image: { type: 'jpeg', quality: 1 }, 
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true, 
+                        windowWidth: 800,
+                        x: 0, 
+                        y: 0
+                    }, 
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
                 };
 
-                await html2pdf().set(opt).from(element).save();
-                document.getElementById('pdf-render').style.display = 'none'; // Esconde de novo
+                await html2pdf().set(opt).from(clone).save();
+                
+                // LIMPEZA E REATIVAÇÃO DO CSS
+                document.body.removeChild(ghostContainer);
+                window.scrollTo(0, currentScrollY);
+                document.body.style.overflowX = 'hidden';
+                document.documentElement.style.overflowX = 'hidden';
 
             } catch (err) {
                 console.error("Erro na geração:", err);
