@@ -10,6 +10,15 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/1890/1890663.png" type="image/png">
+    <link rel="manifest" href="./manifest.json">
+
+    <meta name="theme-color" content="#07c2b2">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Oboticário">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180x180.png?v=2">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -1176,7 +1185,8 @@
                 </div>
                 <div id="loading_pdf"
                     style="display:none; color: var(--warning); font-size: 0.85rem; font-weight: bold; margin-top: 10px;">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Lendo faturamento... aguarde.</div>
+                    <i class="fa-solid fa-spinner fa-spin"></i> Lendo faturamento... aguarde.
+                </div>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <input type="text" id="m_cod_pedido" placeholder="Cód. da Caixa (Ex: 115668350)">
@@ -2569,6 +2579,14 @@
 
         // Iniciar
         carregarProdutosBase(); carregarPedidosEngine(); carregarClientesEngine(); carregarVendasEngine(); carregarListaPagamentos(); carregarDashboardEngine();
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('Service Worker registrado.', reg);
+                }).catch(err => console.error('Erro no SW', err));
+            });
+        }
     </script>
 
 </html>
