@@ -2247,17 +2247,71 @@
             } catch (err) { console.error("Erro no PDF:", err); alert("Falha ao gerar PDF."); }
         };
 
-        window.compartilharPDF = async () => {
-            const element = document.getElementById('pdf-wrapper'); const clienteStr = document.getElementById('pdf_cliente').innerText;
-            const opt = { margin: 0.2, filename: `Recibo_${clienteStr.replace(/ /g, "_")}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+       window.compartilharPDF = async () => {
+            const originalElement = document.getElementById('pdf-wrapper');
+            const clienteStr = document.getElementById('pdf_cliente').innerText;
+            
+            // 1. DESATIVA A GUILHOTINA DO CSS MOBILE (CRÍTICO)
+            document.body.style.overflowX = 'visible';
+            document.documentElement.style.overflowX = 'visible';
+
+            // 2. DOM Fantasma 100% Livre de Restrições
+            const ghostContainer = document.createElement('div');
+            ghostContainer.style.position = 'absolute';
+            ghostContainer.style.top = '0';
+            ghostContainer.style.left = '0';
+            ghostContainer.style.width = '800px'; 
+            ghostContainer.style.zIndex = '-9999';
+            ghostContainer.style.backgroundColor = '#ffffff';
+
+            const clone = originalElement.cloneNode(true);
+            clone.style.width = '800px';
+            clone.style.maxWidth = '800px';
+            clone.style.margin = '0';
+            clone.style.padding = '30px'; 
+            clone.style.backgroundColor = '#ffffff';
+            clone.style.color = '#111111';
+            clone.style.boxSizing = 'border-box';
+            
+            ghostContainer.appendChild(clone);
+            document.body.appendChild(ghostContainer);
+
+            const currentScrollY = window.scrollY;
+            window.scrollTo(0, 0);
+
+            const opt = { 
+                margin: 0.2, 
+                filename: `Recibo_${clienteStr.replace(/ /g, "_")}.pdf`, 
+                image: { type: 'jpeg', quality: 1 }, 
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    windowWidth: 800,
+                    x: 0, 
+                    y: 0
+                }, 
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
+            };
+
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            if (isMobile && navigator.share) {
-                try {
-                    const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
+            
+            try {
+                if (isMobile && navigator.share) {
+                    const pdfBlob = await html2pdf().set(opt).from(clone).outputPdf('blob');
                     const file = new File([pdfBlob], opt.filename, { type: 'application/pdf' });
                     await navigator.share({ title: `Recibo de Compra - ${clienteStr}`, files: [file] });
-                } catch (e) { console.log("Compartilhamento nativo cancelado.", e); }
-            } else { html2pdf().set(opt).from(element).save(); }
+                } else { 
+                    await html2pdf().set(opt).from(clone).save(); 
+                }
+            } catch (e) { 
+                console.log("Compartilhamento nativo cancelado.", e); 
+            } finally {
+                // 3. LIMPEZA E REATIVAÇÃO DO CSS
+                document.body.removeChild(ghostContainer);
+                window.scrollTo(0, currentScrollY);
+                document.body.style.overflowX = 'hidden';
+                document.documentElement.style.overflowX = 'hidden';
+            }
         };
 
         // --- MODOS DE EDIÇÃO, MEMÓRIA E ALOCAÇÃO ---
