@@ -1,0 +1,24 @@
+{
+  "name": "O Boticário - Gerenciamento",
+  "short_name": "Oboticário",
+  "description": "Sistema de gerenciamento de caixas e sacolas",
+  "start_url": "gerenciamento.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e0e5ec",
+  "theme_color": "#07c2b2",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
