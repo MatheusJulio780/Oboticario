@@ -429,7 +429,6 @@
             document.getElementById('loading-overlay').style.display = 'none';
         }
 
-        // MOTOR DE GERAÇÃO DO PDF CLIENT-SIDE
         window.gerarReciboCliente = async (codPedido, btnElement) => {
             const originalText = btnElement.innerHTML;
             btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aguarde...';
@@ -437,9 +436,9 @@
 
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                const cliente = urlParams.get('c').replace(/_/g, ' ');
+                const clienteParam = urlParams.get('c');
+                const cliente = clienteParam ? clienteParam.replace(/_/g, ' ') : 'Cliente';
 
-                // Coleta dados específicos da Caixa requerida
                 const pedidoDoc = await getDoc(doc(db, "pedidos_marca", codPedido));
                 const pedido = pedidoDoc.exists() ? pedidoDoc.data() : null;
 
@@ -447,7 +446,7 @@
                 const pgSnap = await getDocs(query(collection(db, "pagamentos_recebidos"), where("cod_pedido", "==", codPedido), where("cliente", "==", cliente)));
 
                 let totalVendaOriginal = 0, maxParcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
-
+                
                 vSnap.forEach(d => {
                     const v = d.data();
                     qtd++; const val = parseFloat(v.valor_venda) || 0; totalVendaOriginal += val;
@@ -474,7 +473,6 @@
 
                 const statusV1 = calcularDias(venc1); const statusV2 = calcularDias(venc2); const statusV3 = calcularDias(venc3);
 
-                // Algoritmo Idêntico ao Painel ADM
                 const calcularEncargos = (valorBase, jaPago, status) => {
                     if (jaPago >= (valorBase - 0.1)) return { total: 0, juros: 0, multa: 0, devedor: 0 };
                     if (!status.atrasado) return { total: valorBase - jaPago, juros: 0, multa: 0, devedor: valorBase - jaPago };
@@ -508,7 +506,6 @@
                     else if (maxParcelas === 3) txtAlerta = pago_p1 >= valBaseP1 ? (pago_p2 >= valBaseP2 ? `${statusV3.texto} a 3ª parcela` : `${statusV2.texto} a 2ª parcela`) : `${statusV1.texto} a 1ª parcela`;
                 }
 
-                // Injeta no DOM Invisível
                 const setEl = (id, content, className) => { const el = document.getElementById(id); if (el) { el.innerHTML = content; if (className) el.className = className; } };
 
                 setEl('pdf_cod_pedido', codPedido); setEl('pdf_cliente', cliente); setEl('pdf_qtd', qtd); setEl('pdf_total', `R$ ${totalVendaOriginal.toFixed(2)}`);
@@ -522,36 +519,37 @@
                 document.getElementById('box_p3').style.display = maxParcelas === 3 ? 'flex' : 'none';
 
                 // =======================================================
-                // Dispara o conversor com Desbloqueio de Overflow
+                // ARQUITETURA DE PDF DEFINITIVA (MEMÓRIA BLINDADA E LARGURA FIXA)
                 // =======================================================
-                const originalElement = document.getElementById('pdf-wrapper');
-                
-                // DESATIVA A GUILHOTINA DO CSS MOBILE (CRÍTICO)
-                document.body.style.overflowX = 'visible';
-                document.documentElement.style.overflowX = 'visible';
+                const wrapper = document.getElementById('pdf-wrapper');
+                const originalHTML = wrapper.innerHTML;
 
-                const ghostContainer = document.createElement('div');
-                ghostContainer.style.position = 'absolute';
-                ghostContainer.style.top = '0';
-                ghostContainer.style.left = '0';
-                ghostContainer.style.width = '800px';
-                ghostContainer.style.zIndex = '-9999';
-                ghostContainer.style.backgroundColor = '#ffffff';
-
-                const clone = originalElement.cloneNode(true);
-                clone.style.width = '800px';
-                clone.style.maxWidth = '800px';
-                clone.style.margin = '0';
-                clone.style.padding = '30px';
-                clone.style.backgroundColor = '#ffffff';
-                clone.style.color = '#111111';
-                clone.style.boxSizing = 'border-box';
-                
-                ghostContainer.appendChild(clone);
-                document.body.appendChild(ghostContainer);
-                
-                const currentScrollY = window.scrollY;
-                window.scrollTo(0, 0);
+                // min-width: 800px garante que a tabela não será achatada
+                const fullHTML = `
+                    <div style="width: 800px; min-width: 800px; max-width: 800px; padding: 20px; background: #ffffff; color: #111111; font-family: Arial, sans-serif;">
+                        <style>
+                            * { box-sizing: border-box; font-family: Arial, sans-serif !important; }
+                            .pdf-header-custom { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
+                            .pdf-info-grid { display: table !important; width: 100% !important; background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
+                            .pdf-info-grid > div { display: table-cell !important; width: 50% !important; vertical-align: top; }
+                            .pdf-info-grid > div:last-child { text-align: right !important; }
+                            .pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 13px; table-layout: fixed; }
+                            .pdf-table th, .pdf-table td { padding: 8px 10px; border-bottom: 1px solid #eeeeee; word-wrap: break-word; }
+                            .pdf-table th { background: #eeeeee; text-align: left; border-bottom: 2px solid #dddddd; color:#333; font-weight: bold; }
+                            .pdf-footer-grid { display: table !important; width: 100% !important; border-top: 2px solid #eeeeee; padding-top: 15px; }
+                            .pdf-footer-grid > div { display: table-cell !important; vertical-align: top; }
+                            .pdf-footer-grid > div:first-child { width: 50% !important; }
+                            .pdf-footer-grid > div:last-child { width: 50% !important; text-align: right !important; }
+                            .pdf-footer-grid > div:last-child > div > div { display: table !important; width: 100% !important; margin-bottom: 6px; }
+                            .pdf-footer-grid > div:last-child > div > div > span { display: table-cell !important; text-align: left; }
+                            .pdf-footer-grid > div:last-child > div > div > strong { display: table-cell !important; text-align: right; }
+                            .pdf-valor-ok { color: #166534; background: #dcfce7; padding: 4px 8px; border-radius: 6px; }
+                            .pdf-valor-atrasado { color: #991b1b; background: #fee2e2; padding: 4px 8px; border-radius: 6px; border: 1px solid #fca5a5; }
+                            .pdf-valor-neutro { color: #475569; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; }
+                        </style>
+                        ${originalHTML}
+                    </div>
+                `;
 
                 const opt = { 
                     margin: 0.2, 
@@ -560,25 +558,28 @@
                     html2canvas: { 
                         scale: 2, 
                         useCORS: true, 
-                        windowWidth: 800,
-                        x: 0, 
-                        y: 0
+                        windowWidth: 800 // ESSENCIAL: Avisa a câmera que a largura simulada é 800px
                     }, 
                     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
                 };
 
-                await html2pdf().set(opt).from(clone).save();
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const worker = html2pdf().set(opt).from(fullHTML);
                 
-                // LIMPEZA E REATIVAÇÃO DO CSS
-                document.body.removeChild(ghostContainer);
-                window.scrollTo(0, currentScrollY);
-                document.body.style.overflowX = 'hidden';
-                document.documentElement.style.overflowX = 'hidden';
+                if (isMobile && navigator.share) {
+                    const pdfBlob = await worker.outputPdf('blob');
+                    const file = new File([pdfBlob], opt.filename, { type: 'application/pdf' });
+                    await navigator.share({ title: `Recibo - ${cliente}`, files: [file] });
+                } else { 
+                    await worker.save(); 
+                }
 
             } catch (err) {
-                console.error("Erro na geração:", err);
-                alert("Falha na rede ou leitura dos dados. Tente novamente.");
+                console.error("Erro crítico:", err);
+                alert("Ocorreu um erro ao gerar o PDF. Verifique sua conexão.");
             } finally {
+                // ANIQUILAÇÃO DE LIXO NA TELA
+                document.querySelectorAll('.html2pdf__container').forEach(el => el.remove());
                 btnElement.innerHTML = originalText;
                 btnElement.disabled = false;
             }
