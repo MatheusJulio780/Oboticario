@@ -6,6 +6,7 @@
     <title>Minha Conta | O Boticário</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
@@ -42,13 +43,28 @@
             background: var(--bg); box-shadow: var(--neu-out); border: none; 
             padding: 10px 15px; border-radius: 12px; color: var(--primary); 
             font-weight: 800; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; gap: 5px;
+            transition: 0.2s;
         }
         .btn-pdf:active { box-shadow: var(--neu-in); }
+        .btn-pdf:disabled { opacity: 0.6; cursor: not-allowed; }
 
         #loading-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-weight: 800; }
         
-        /* Estilos do PDF (Invisível na tela) */
+        /* =========================================================
+           ESTILOS DO PDF (Oculto na tela principal)
+        ========================================================= */
         #pdf-render { display: none; }
+        #pdf-wrapper { background: #ffffff; color: #111111; padding: 25px; margin: 0 auto; font-family: 'Arial', sans-serif; font-size: 0.85rem; width: 100%; max-width: 600px; box-sizing: border-box; }
+        .pdf-header-custom { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
+        .pdf-info-grid { display: flex; justify-content: space-between; background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.8rem; }
+        .pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.75rem; }
+        .pdf-table th { background: #eeeeee; padding: 8px; text-align: left; border-bottom: 2px solid #dddddd; color:#333; }
+        .pdf-table td { padding: 6px 8px; border-bottom: 1px solid #eeeeee; color:#222; }
+        .pdf-footer-grid { border-top: 2px solid #eeeeee; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-start; }
+        
+        .pdf-valor-ok { color: #166534; background: #dcfce7; padding: 4px 8px; border-radius: 6px; }
+        .pdf-valor-atrasado { color: #991b1b; background: #fee2e2; padding: 4px 8px; border-radius: 6px; border: 1px solid #fca5a5; }
+        .pdf-valor-neutro { color: #475569; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -59,7 +75,7 @@
         <div class="header">
             <i class="fa-solid fa-droplet" style="color: var(--primary); font-size: 2.5rem; margin-bottom: 10px;"></i>
             <h1>Olá, <span id="client-name">Cliente</span></h1>
-            <p id="client-summary" style="font-size: 0.9rem; color: var(--text-muted);"></p>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Painel de Conferência O Boticário</p>
         </div>
 
         <div class="card debt-highlight">
@@ -72,63 +88,108 @@
         <div id="lista-parcelas"></div>
     </div>
 
+    <div id="pdf-render">
+        <div id="pdf-wrapper">
+            <div class="pdf-header-custom">
+                <h2 style="margin: 0; color: #2eb8b8; font-size: 1.5rem; text-transform: uppercase; font-weight: 900;">O Boticário</h2>
+                <p style="margin: 5px 0 0 0; font-weight: bold; font-size: 1rem;">Recibo de Compra</p>
+            </div>
+            <div class="pdf-info-grid">
+                <div>
+                    <p style="margin: 0 0 4px 0;"><strong>Cliente:</strong> <span id="pdf_cliente"></span></p>
+                    <p style="margin: 0;"><strong>Caixa Ref:</strong> #<span id="pdf_cod_pedido"></span></p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="margin: 0 0 4px 0;"><strong>Entrega:</strong> <span id="pdf_data_entrega"></span></p>
+                    <p style="margin: 0;"><strong>Itens:</strong> <span id="pdf_qtd"></span></p>
+                </div>
+            </div>
+            <table class="pdf-table">
+                <thead><tr><th>Cód</th><th>Descrição</th><th>Valor</th><th>Condição</th></tr></thead>
+                <tbody id="pdf_tabela_itens"></tbody>
+            </table>
+            <div class="pdf-footer-grid">
+                <div style="width: 50%;">
+                    <div id="pdf_alerta_vencimento" style="padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; text-align: center;"></div>
+                </div>
+                <div style="width: 45%; text-align: right;">
+                    <p style="margin: 0 0 8px 0; font-size: 1.1rem;">Total: <strong style="color: #2eb8b8;" id="pdf_total"></strong></p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #eeeeee; font-size: 0.75rem;">
+                        <div style="display:flex; justify-content: space-between; margin-bottom: 4px;"><span>1ª (<span id="pdf_d1_min"></span>):</span> <strong id="pdf_p1"></strong></div>
+                        <div style="display:flex; justify-content: space-between; margin-bottom: 4px;"><span>2ª (<span id="pdf_d2_min"></span>):</span> <strong id="pdf_p2"></strong></div>
+                        <div id="box_p3" style="display:flex; justify-content: space-between;"><span>3ª (<span id="pdf_d3_min"></span>):</span> <strong id="pdf_p3"></strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCi03g667vB1uOT1zsuDc1AkiyQ1b8o0GQ", authDomain: "oboticario-e8369.firebaseapp.com", projectId: "oboticario-e8369" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Funções de Data
+        // FUNÇÕES UTILITÁRIAS E DE CÁLCULO
         function adicionarMeses(dataISO, meses) {
+            if (!dataISO) return null;
             const [ano, mes, dia] = dataISO.split('-');
             const dt = new Date(ano, parseInt(mes) - 1 + meses, dia);
             return dt.toISOString().split('T')[0];
         }
 
         function formatarDataBR(dataISO) { return dataISO ? dataISO.split('-').reverse().join('/') : '--'; }
+        
+        function calcularDias(dataAlvoISO) {
+            if (!dataAlvoISO) return { texto: '--', atrasado: false, dias: 0 };
+            const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+            const [ano, mes, dia] = dataAlvoISO.split('-'); const alvo = new Date(ano, mes - 1, dia);
+            const diffDays = Math.ceil((alvo - hoje) / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) return { texto: `${Math.abs(diffDays)} d atrasados`, atrasado: true, dias: diffDays };
+            if (diffDays === 0) return { texto: `Vence HOJE`, atrasado: false, dias: 0 };
+            return { texto: `Vence em ${diffDays} d`, atrasado: false, dias: diffDays };
+        }
 
+        // CARREGAMENTO DA TELA PRINCIPAL
         async function carregarDadosCliente() {
             const urlParams = new URLSearchParams(window.location.search);
             const nomeCliente = urlParams.get('c');
 
             if (!nomeCliente) {
-                document.body.innerHTML = "<div style='text-align:center; padding:50px;'>Cliente não identificado.</div>";
+                document.body.innerHTML = "<div style='text-align:center; padding:50px;'>Cliente não identificado na URL.</div>";
                 return;
             }
 
-            document.getElementById('client-name').innerText = nomeCliente.replace(/_/g, ' ');
+            const nomeFormatado = nomeCliente.replace(/_/g, ' ');
+            document.getElementById('client-name').innerText = nomeFormatado;
 
-            // Busca Vendas e Pagamentos
             const [vSnap, pgSnap] = await Promise.all([
-                getDocs(query(collection(db, "vendas_clientes"), where("cliente", "==", nomeCliente))),
-                getDocs(query(collection(db, "pagamentos_recebidos"), where("cliente", "==", nomeCliente)))
+                getDocs(query(collection(db, "vendas_clientes"), where("cliente", "==", nomeFormatado))),
+                getDocs(query(collection(db, "pagamentos_recebidos"), where("cliente", "==", nomeFormatado)))
             ]);
 
             let totalPendenteGlobal = 0;
-            const parcelasMapeadas = [];
             const pagamentosMap = {};
 
-            // Mapeia Pagamentos Realizados
             pgSnap.forEach(d => {
                 const pg = d.data();
                 const chave = `${pg.cod_pedido}_p${pg.parcela}`;
                 pagamentosMap[chave] = (pagamentosMap[chave] || 0) + pg.valor_pago;
             });
 
-            // Agrupa Vendas por Caixa para calcular parcelas
             const caixas = {};
             vSnap.forEach(d => {
                 const v = d.data();
-                if (!caixas[v.cod_pedido]) {
-                    caixas[v.cod_pedido] = { total: 0, parcelas: v.parcelas, venc: v.venc_cliente };
-                }
+                if (!caixas[v.cod_pedido]) { caixas[v.cod_pedido] = { total: 0, parcelas: v.parcelas, venc: v.venc_cliente }; }
+                if (v.parcelas > caixas[v.cod_pedido].parcelas) { caixas[v.cod_pedido].parcelas = v.parcelas; }
                 caixas[v.cod_pedido].total += parseFloat(v.valor_venda);
             });
 
             const listaHTML = document.getElementById('lista-parcelas');
             listaHTML.innerHTML = '';
+            let pendenciasAtivas = 0;
 
             for (const cod in caixas) {
                 const c = caixas[cod];
@@ -140,6 +201,7 @@
                     const saldo = valorParcela - pago;
 
                     if (saldo > 0.1) {
+                        pendenciasAtivas++;
                         totalPendenteGlobal += saldo;
                         const hoje = new Date().toISOString().split('T')[0];
                         const estaAtrasada = dataVenc < hoje;
@@ -153,9 +215,9 @@
                                     </span>
                                 </div>
                                 <div style="text-align:right;">
-                                    <div style="font-weight:800; font-size:1.1rem;">R$ ${saldo.toFixed(2)}</div>
-                                    <button class="btn-pdf" onclick="window.gerarReciboCliente('${cod}')">
-                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    <div style="font-weight:800; font-size:1.1rem; margin-bottom: 6px;">R$ ${saldo.toFixed(2)}</div>
+                                    <button class="btn-pdf" onclick="window.gerarReciboCliente('${cod}', this)">
+                                        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
                                     </button>
                                 </div>
                             </div>
@@ -164,15 +226,128 @@
                 }
             }
 
+            if (pendenciasAtivas === 0) {
+                listaHTML.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--success); font-weight: bold;"><i class="fa-solid fa-check-circle" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i> Parabéns! Nenhuma pendência ativa.</div>`;
+            }
+
             document.getElementById('total-pendente').innerText = `R$ ${totalPendenteGlobal.toFixed(2)}`;
             document.getElementById('loading-overlay').style.display = 'none';
         }
 
-        // Função global para o PDF do cliente (simplificada)
-        window.gerarReciboCliente = (cod) => {
-            alert("Gerando recibo detalhado da Caixa #" + cod + ". Aguarde o download.");
-            // Aqui você pode redirecionar para uma função de geração de PDF ou abrir o PDF gerado pelo admin
-            // Para manter simples, você pode usar a mesma lógica do seu gerenciamento.html adaptada.
+        // MOTOR DE GERAÇÃO DO PDF CLIENT-SIDE
+        window.gerarReciboCliente = async (codPedido, btnElement) => {
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aguarde...';
+            btnElement.disabled = true;
+
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const cliente = urlParams.get('c').replace(/_/g, ' ');
+
+                // Coleta dados específicos da Caixa requerida
+                const pedidoDoc = await getDoc(doc(db, "pedidos_marca", codPedido));
+                const pedido = pedidoDoc.exists() ? pedidoDoc.data() : null;
+
+                const vSnap = await getDocs(query(collection(db, "vendas_clientes"), where("cod_pedido", "==", codPedido), where("cliente", "==", cliente)));
+                const pgSnap = await getDocs(query(collection(db, "pagamentos_recebidos"), where("cod_pedido", "==", codPedido), where("cliente", "==", cliente)));
+
+                let totalVendaOriginal = 0, maxParcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
+                
+                vSnap.forEach(d => {
+                    const v = d.data();
+                    qtd++; const val = parseFloat(v.valor_venda) || 0; totalVendaOriginal += val;
+                    if (v.parcelas > maxParcelas) maxParcelas = v.parcelas; venc1 = v.venc_cliente;
+                    const valCondicao = v.parcelas > 1 ? `R$ ${(val / v.parcelas).toFixed(2)}` : 'À Vista';
+                    const strParcela = v.parcelas > 1 ? `${v.parcelas}X` : '1X';
+                    htmlTable += `<tr><td>${v.cod_produto}</td><td>${v.nome_item}</td><td><strong>R$ ${val.toFixed(2)}</strong></td><td>${strParcela} (${valCondicao})</td></tr>`;
+                });
+
+                let pago_p1 = 0, pago_p2 = 0, pago_p3 = 0;
+                pgSnap.forEach(d => {
+                    const pg = d.data();
+                    if (pg.parcela === 1) pago_p1 += parseFloat(pg.valor_pago);
+                    if (pg.parcela === 2) pago_p2 += parseFloat(pg.valor_pago);
+                    if (pg.parcela === 3) pago_p3 += parseFloat(pg.valor_pago);
+                });
+
+                const valBaseP1 = maxParcelas >= 1 ? (totalVendaOriginal / maxParcelas) : totalVendaOriginal;
+                const valBaseP2 = maxParcelas >= 2 ? (totalVendaOriginal / maxParcelas) : 0;
+                const valBaseP3 = maxParcelas === 3 ? (totalVendaOriginal / maxParcelas) : 0;
+
+                const venc2 = maxParcelas >= 2 ? adicionarMeses(venc1, 1) : null;
+                const venc3 = maxParcelas === 3 ? adicionarMeses(venc1, 2) : null;
+
+                const statusV1 = calcularDias(venc1); const statusV2 = calcularDias(venc2); const statusV3 = calcularDias(venc3);
+
+                // Algoritmo Idêntico ao Painel ADM
+                const calcularEncargos = (valorBase, jaPago, status) => {
+                    if (jaPago >= (valorBase - 0.1)) return { total: 0, juros: 0, multa: 0, devedor: 0 };
+                    if (!status.atrasado) return { total: valorBase - jaPago, juros: 0, multa: 0, devedor: valorBase - jaPago };
+                    const dias = Math.abs(status.dias); const multa = 5.93; const juros = dias * 0.89; const devOriginal = valorBase - jaPago;
+                    return { total: devOriginal + multa + juros, multa: multa, juros: juros, devedorOriginal: devOriginal };
+                };
+
+                const encP1 = calcularEncargos(valBaseP1, pago_p1, statusV1);
+                const encP2 = calcularEncargos(valBaseP2, pago_p2, statusV2);
+                const encP3 = calcularEncargos(valBaseP3, pago_p3, statusV3);
+
+                let classP1 = 'pdf-valor-neutro', classP2 = 'pdf-valor-neutro', classP3 = 'pdf-valor-neutro';
+                if (pago_p1 >= (valBaseP1 - 0.1)) classP1 = 'pdf-valor-ok'; else if (statusV1.atrasado) classP1 = 'pdf-valor-atrasado';
+                if (maxParcelas >= 2) { if (pago_p2 >= (valBaseP2 - 0.1)) classP2 = 'pdf-valor-ok'; else if (statusV2.atrasado) classP2 = 'pdf-valor-atrasado'; }
+                if (maxParcelas === 3) { if (pago_p3 >= (valBaseP3 - 0.1)) classP3 = 'pdf-valor-ok'; else if (statusV3.atrasado) classP3 = 'pdf-valor-atrasado'; }
+
+                const txtP1 = pago_p1 >= (valBaseP1 - 0.1) ? 'PAGO ✓' : `R$ ${encP1.total.toFixed(2)}`;
+                const txtP2 = maxParcelas >= 2 ? (pago_p2 >= (valBaseP2 - 0.1) ? 'PAGO ✓' : `R$ ${encP2.total.toFixed(2)}`) : '--';
+                const txtP3 = maxParcelas === 3 ? (pago_p3 >= (valBaseP3 - 0.1) ? 'PAGO ✓' : `R$ ${encP3.total.toFixed(2)}`) : '--';
+
+                let txtAlerta = '', classeAlerta = '';
+                if (statusV1.atrasado && pago_p1 < valBaseP1) {
+                    txtAlerta = `⚠️ 1ª PARCELA ATRASADA: R$ ${encP1.devedorOriginal.toFixed(2)} + R$ ${encP1.multa} (Multa) + R$ ${encP1.juros.toFixed(2)} (Juros)`; classeAlerta = 'pdf-valor-atrasado';
+                } else if (maxParcelas >= 2 && statusV2.atrasado && pago_p2 < valBaseP2) {
+                    txtAlerta = `⚠️ 2ª PARCELA ATRASADA: R$ ${encP2.devedorOriginal.toFixed(2)} + R$ ${encP2.multa} (Multa) + R$ ${encP2.juros.toFixed(2)} (Juros)`; classeAlerta = 'pdf-valor-atrasado';
+                } else if (maxParcelas === 3 && statusV3.atrasado && pago_p3 < valBaseP3) {
+                    txtAlerta = `⚠️ 3ª PARCELA ATRASADA: R$ ${encP3.devedorOriginal.toFixed(2)} + R$ ${encP3.multa} (Multa) + R$ ${encP3.juros.toFixed(2)} (Juros)`; classeAlerta = 'pdf-valor-atrasado';
+                } else {
+                    if (maxParcelas === 1) txtAlerta = statusV1.texto;
+                    else if (maxParcelas === 2) txtAlerta = pago_p1 >= valBaseP1 ? `${statusV2.texto} a 2ª parcela` : `${statusV1.texto} a 1ª parcela`;
+                    else if (maxParcelas === 3) txtAlerta = pago_p1 >= valBaseP1 ? (pago_p2 >= valBaseP2 ? `${statusV3.texto} a 3ª parcela` : `${statusV2.texto} a 2ª parcela`) : `${statusV1.texto} a 1ª parcela`;
+                }
+
+                // Injeta no DOM Invisível
+                const setEl = (id, content, className) => { const el = document.getElementById(id); if (el) { el.innerHTML = content; if (className) el.className = className; } };
+
+                setEl('pdf_cod_pedido', codPedido); setEl('pdf_cliente', cliente); setEl('pdf_qtd', qtd); setEl('pdf_total', `R$ ${totalVendaOriginal.toFixed(2)}`);
+                setEl('pdf_p1', txtP1, classP1); setEl('pdf_p2', txtP2, classP2); setEl('pdf_p3', txtP3, classP3);
+                setEl('pdf_d1_min', venc1 ? formatarDataBR(venc1).substring(0, 5) : '--');
+                setEl('pdf_d2_min', (maxParcelas >= 2 && venc2) ? formatarDataBR(venc2).substring(0, 5) : '--');
+                setEl('pdf_d3_min', (maxParcelas === 3 && venc3) ? formatarDataBR(venc3).substring(0, 5) : '--');
+                setEl('pdf_alerta_vencimento', txtAlerta, classeAlerta);
+                setEl('pdf_data_entrega', (pedido && pedido.data_entrega) ? formatarDataBR(pedido.data_entrega) : '--');
+                setEl('pdf_tabela_itens', htmlTable);
+                document.getElementById('box_p3').style.display = maxParcelas === 3 ? 'flex' : 'none';
+
+                // Dispara o conversor HTML2PDF
+                const element = document.getElementById('pdf-wrapper');
+                document.getElementById('pdf-render').style.display = 'block'; // Fica visível para captura rápida
+                
+                const opt = { 
+                    margin: 0.2, 
+                    filename: `Recibo_${cliente.replace(/ /g, "_")}_Caixa_${codPedido}.pdf`, 
+                    image: { type: 'jpeg', quality: 0.98 }, 
+                    html2canvas: { scale: 2 }, 
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
+                };
+
+                await html2pdf().set(opt).from(element).save();
+                document.getElementById('pdf-render').style.display = 'none'; // Esconde de novo
+
+            } catch (err) {
+                console.error("Erro na geração:", err);
+                alert("Falha na rede ou leitura dos dados. Tente novamente.");
+            } finally {
+                btnElement.innerHTML = originalText;
+                btnElement.disabled = false;
+            }
         };
 
         carregarDadosCliente();
