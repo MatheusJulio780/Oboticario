@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minha Conta | O Boticário</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --bg: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72;
+            --primary: #07c2b2; --success: #00b894; --danger: #d63031; --warning: #fca311;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-out: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            --neu-in: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); padding: 20px; line-height: 1.6; }
+        
+        .container { max-width: 500px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
+        .header h1 { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        
+        .card { background: var(--bg); box-shadow: var(--neu-out); border-radius: 24px; padding: 25px; margin-bottom: 25px; }
+        .section-title { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        
+        .debt-highlight { text-align: center; }
+        .total-value { font-size: 2.2rem; font-weight: 800; color: var(--danger); margin: 10px 0; }
+        
+        .installment-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; border-radius: 16px; background: var(--bg); 
+            box-shadow: var(--neu-out); margin-bottom: 15px; border: 1px solid transparent;
+        }
+        .installment-item.atrasada { border-color: rgba(214, 48, 49, 0.2); }
+        .inst-info strong { display: block; font-size: 1rem; }
+        .inst-info span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+        
+        .btn-pdf { 
+            background: var(--bg); box-shadow: var(--neu-out); border: none; 
+            padding: 10px 15px; border-radius: 12px; color: var(--primary); 
+            font-weight: 800; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-pdf:active { box-shadow: var(--neu-in); }
+
+        #loading-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        
+        /* Estilos do PDF (Invisível na tela) */
+        #pdf-render { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">Carregando seus dados...</div>
+
+    <div class="container">
+        <div class="header">
+            <i class="fa-solid fa-droplet" style="color: var(--primary); font-size: 2.5rem; margin-bottom: 10px;"></i>
+            <h1>Olá, <span id="client-name">Cliente</span></h1>
+            <p id="client-summary" style="font-size: 0.9rem; color: var(--text-muted);"></p>
+        </div>
+
+        <div class="card debt-highlight">
+            <div class="section-title"><i class="fa-solid fa-triangle-exclamation"></i> Total Pendente</div>
+            <div class="total-value" id="total-pendente">R$ 0,00</div>
+            <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Somatória de todas as suas parcelas abertas.</p>
+        </div>
+
+        <div class="section-title"><i class="fa-solid fa-calendar-days"></i> Minhas Próximas Parcelas</div>
+        <div id="lista-parcelas"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyCi03g667vB1uOT1zsuDc1AkiyQ1b8o0GQ", authDomain: "oboticario-e8369.firebaseapp.com", projectId: "oboticario-e8369" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Funções de Data
+        function adicionarMeses(dataISO, meses) {
+            const [ano, mes, dia] = dataISO.split('-');
+            const dt = new Date(ano, parseInt(mes) - 1 + meses, dia);
+            return dt.toISOString().split('T')[0];
+        }
+
+        function formatarDataBR(dataISO) { return dataISO ? dataISO.split('-').reverse().join('/') : '--'; }
+
+        async function carregarDadosCliente() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeCliente = urlParams.get('c');
+
+            if (!nomeCliente) {
+                document.body.innerHTML = "<div style='text-align:center; padding:50px;'>Cliente não identificado.</div>";
+                return;
+            }
+
+            document.getElementById('client-name').innerText = nomeCliente.replace(/_/g, ' ');
+
+            // Busca Vendas e Pagamentos
+            const [vSnap, pgSnap] = await Promise.all([
+                getDocs(query(collection(db, "vendas_clientes"), where("cliente", "==", nomeCliente))),
+                getDocs(query(collection(db, "pagamentos_recebidos"), where("cliente", "==", nomeCliente)))
+            ]);
+
+            let totalPendenteGlobal = 0;
+            const parcelasMapeadas = [];
+            const pagamentosMap = {};
+
+            // Mapeia Pagamentos Realizados
+            pgSnap.forEach(d => {
+                const pg = d.data();
+                const chave = `${pg.cod_pedido}_p${pg.parcela}`;
+                pagamentosMap[chave] = (pagamentosMap[chave] || 0) + pg.valor_pago;
+            });
+
+            // Agrupa Vendas por Caixa para calcular parcelas
+            const caixas = {};
+            vSnap.forEach(d => {
+                const v = d.data();
+                if (!caixas[v.cod_pedido]) {
+                    caixas[v.cod_pedido] = { total: 0, parcelas: v.parcelas, venc: v.venc_cliente };
+                }
+                caixas[v.cod_pedido].total += parseFloat(v.valor_venda);
+            });
+
+            const listaHTML = document.getElementById('lista-parcelas');
+            listaHTML.innerHTML = '';
+
+            for (const cod in caixas) {
+                const c = caixas[cod];
+                const valorParcela = c.total / c.parcelas;
+
+                for (let i = 1; i <= c.parcelas; i++) {
+                    const dataVenc = adicionarMeses(c.venc, i - 1);
+                    const pago = pagamentosMap[`${cod}_p${i}`] || 0;
+                    const saldo = valorParcela - pago;
+
+                    if (saldo > 0.1) {
+                        totalPendenteGlobal += saldo;
+                        const hoje = new Date().toISOString().split('T')[0];
+                        const estaAtrasada = dataVenc < hoje;
+
+                        listaHTML.innerHTML += `
+                            <div class="installment-item ${estaAtrasada ? 'atrasada' : ''}">
+                                <div class="inst-info">
+                                    <strong>${i}ª Parcela - Caixa #${cod}</strong>
+                                    <span style="${estaAtrasada ? 'color:var(--danger)' : ''}">
+                                        Vencimento: ${formatarDataBR(dataVenc)} ${estaAtrasada ? '(Atrasada)' : ''}
+                                    </span>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-weight:800; font-size:1.1rem;">R$ ${saldo.toFixed(2)}</div>
+                                    <button class="btn-pdf" onclick="window.gerarReciboCliente('${cod}')">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            document.getElementById('total-pendente').innerText = `R$ ${totalPendenteGlobal.toFixed(2)}`;
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        // Função global para o PDF do cliente (simplificada)
+        window.gerarReciboCliente = (cod) => {
+            alert("Gerando recibo detalhado da Caixa #" + cod + ". Aguarde o download.");
+            // Aqui você pode redirecionar para uma função de geração de PDF ou abrir o PDF gerado pelo admin
+            // Para manter simples, você pode usar a mesma lógica do seu gerenciamento.html adaptada.
+        };
+
+        carregarDadosCliente();
+    </script>
+</body>
+</html>
