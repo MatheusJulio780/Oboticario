@@ -431,7 +431,7 @@
 
         window.gerarReciboCliente = async (codPedido, btnElement) => {
             const originalText = btnElement.innerHTML;
-            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aguarde...';
+            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Visualização...';
             btnElement.disabled = true;
 
             try {
@@ -518,13 +518,9 @@
                 setEl('pdf_tabela_itens', htmlTable);
                 document.getElementById('box_p3').style.display = maxParcelas === 3 ? 'flex' : 'none';
 
-                // =======================================================
-                // ARQUITETURA DE PDF DEFINITIVA (MEMÓRIA BLINDADA E LARGURA FIXA)
-                // =======================================================
                 const wrapper = document.getElementById('pdf-wrapper');
                 const originalHTML = wrapper.innerHTML;
 
-                // min-width: 800px garante que a tabela não será achatada
                 const fullHTML = `
                     <div style="width: 800px; min-width: 800px; max-width: 800px; padding: 20px; background: #ffffff; color: #111111; font-family: Arial, sans-serif;">
                         <style>
@@ -555,34 +551,106 @@
                     margin: 0.2, 
                     filename: `Recibo_${cliente.replace(/ /g, "_")}_Caixa_${codPedido}.pdf`, 
                     image: { type: 'jpeg', quality: 1 }, 
-                    html2canvas: { 
-                        scale: 2, 
-                        useCORS: true, 
-                        windowWidth: 800 // ESSENCIAL: Avisa a câmera que a largura simulada é 800px
-                    }, 
+                    html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, 
                     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
                 };
 
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                const worker = html2pdf().set(opt).from(fullHTML);
-                
-                if (isMobile && navigator.share) {
-                    const pdfBlob = await worker.outputPdf('blob');
-                    const file = new File([pdfBlob], opt.filename, { type: 'application/pdf' });
-                    await navigator.share({ title: `Recibo - ${cliente}`, files: [file] });
-                } else { 
-                    await worker.save(); 
+                // Aciona a abertura do Modal na tela do Cliente
+                if (typeof window.abrirModalPreviewPDF === 'function') {
+                    window.abrirModalPreviewPDF(fullHTML, opt, cliente);
+                } else {
+                    alert("A função de visualização não foi encontrada no código da página.");
                 }
 
             } catch (err) {
                 console.error("Erro crítico:", err);
-                alert("Ocorreu um erro ao gerar o PDF. Verifique sua conexão.");
+                alert("Falha na formatação. Verifique a internet.");
             } finally {
-                // ANIQUILAÇÃO DE LIXO NA TELA
-                document.querySelectorAll('.html2pdf__container').forEach(el => el.remove());
                 btnElement.innerHTML = originalText;
                 btnElement.disabled = false;
             }
+        };
+
+        window.abrirModalPreviewPDF = (fullHTML, optConfig, clienteNome) => {
+            let modal = document.getElementById('sys-pdf-preview-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'sys-pdf-preview-modal';
+                modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:15px; backdrop-filter: blur(4px);';
+                document.body.appendChild(modal);
+            }
+
+            modal.innerHTML = `
+                <div style="background:#fff; width:100%; max-width:600px; border-radius:12px; display:flex; flex-direction:column; height:85vh; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+                    <div style="padding:15px 20px; background:#f8f9fa; border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="margin:0; font-size:1.1rem; color:#333;"><i class="fa-solid fa-file-pdf" style="color:#d32f2f;"></i> Visualização do Recibo</h3>
+                        <button onclick="document.getElementById('sys-pdf-preview-modal').style.display='none'" style="background:none; border:none; font-size:1.5rem; color:#666; cursor:pointer;">&times;</button>
+                    </div>
+                    
+                    <div id="sys-pdf-scroll-area" style="flex:1; overflow-y:auto; background:#cbd5e1; padding:20px; display:flex; justify-content:center; align-items:flex-start;">
+                        <div id="sys-pdf-scale-wrapper" style="transform-origin: top center; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+                            ${fullHTML}
+                        </div>
+                    </div>
+
+                    <div style="padding:15px; border-top:1px solid #ddd; display:flex; gap:10px; justify-content:space-between; background:#fff;">
+                        <button id="btn-pdf-baixar" style="flex:1; padding:12px; background:#0f172a; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <i class="fa-solid fa-download"></i> Baixar PDF
+                        </button>
+                        <button id="btn-pdf-compartilhar" style="flex:1; padding:12px; background:#25D366; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <i class="fa-brands fa-whatsapp"></i> Compartilhar
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+
+            setTimeout(() => {
+                const scrollArea = document.getElementById('sys-pdf-scroll-area');
+                const wrapper = document.getElementById('sys-pdf-scale-wrapper');
+                const availableWidth = scrollArea.clientWidth - 40; 
+                const scale = availableWidth / 800;
+                
+                if(scale < 1) {
+                    wrapper.style.transform = `scale(${scale})`;
+                    wrapper.style.marginBottom = `-${wrapper.scrollHeight * (1 - scale)}px`;
+                } else {
+                    wrapper.style.transform = 'scale(1)';
+                    wrapper.style.marginBottom = '0px';
+                }
+            }, 50);
+
+            const processarPDF = async (acao, btnElement) => {
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
+                btnElement.disabled = true;
+
+                try {
+                    const worker = html2pdf().set(optConfig).from(fullHTML);
+                    if (acao === 'share') {
+                        const pdfBlob = await worker.outputPdf('blob');
+                        const file = new File([pdfBlob], optConfig.filename, { type: 'application/pdf' });
+                        if (navigator.share) {
+                            await navigator.share({ title: `Recibo - ${clienteNome}`, files: [file] });
+                        } else {
+                            alert("Seu navegador recusa o compartilhamento direto. Use a opção de Baixar.");
+                        }
+                    } else {
+                        await worker.save();
+                    }
+                } catch (err) {
+                    console.error("Erro no processo do PDF:", err);
+                    alert("Falha de conversão. Sua conexão ou memória pode ter travado.");
+                } finally {
+                    document.querySelectorAll('.html2pdf__container').forEach(el => el.remove());
+                    btnElement.innerHTML = originalHTML;
+                    btnElement.disabled = false;
+                }
+            };
+
+            document.getElementById('btn-pdf-baixar').onclick = function() { processarPDF('download', this); };
+            document.getElementById('btn-pdf-compartilhar').onclick = function() { processarPDF('share', this); };
         };
 
         carregarDadosCliente();
