@@ -857,7 +857,7 @@
     <div class="top-header-mobile">
         <div style="display:flex; align-items:center; gap: 10px;">
             <i class="fa-solid fa-droplet" style="color:var(--primary); font-size: 1.6rem;"></i>
-            <h2 style="font-size: 1.3rem; font-weight: 800; margin:0;">O Boticário</h2>
+            <h2 style="font-size: 1.3rem; font-weight: 800; margin:0;">OBoticário</h2>
         </div>
         <button class="theme-toggle-mobile" onclick="toggleTheme()">
             <i class="fa-solid fa-moon"></i>
@@ -875,7 +875,7 @@
         <div class="nav-item" onclick="switchPage('clientes')"><i class="fa-solid fa-users"></i><span>Clientes</span>
         </div>
         <div class="nav-item" onclick="switchPage('pagamentos')"><i
-                class="fa-solid fa-hand-holding-dollar"></i><span>Receitas</span></div>
+                class="fa-solid fa-hand-holding-dollar"></i><span>Recebimentos</span></div>
         <div class="nav-item" onclick="switchPage('produtos')"><i class="fa-solid fa-tags"></i><span>Produtos</span>
         </div>
 
@@ -961,7 +961,7 @@
             <div class="header-flex">
                 <div>
                     <h2 style="font-size: 2rem; font-weight: 800;">Estrutura de Caixas</h2>
-                    <p style="color: var(--text-muted); margin-top: 5px;">Mestre de Pedidos Boticário.</p>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Mestre de Pedidos Oboticário.</p>
                 </div>
                 <button class="btn-action" onclick="abrirModal('modalPedidoMaster')"><i class="fa-solid fa-plus"></i>
                     Importar PDF</button>
@@ -1038,7 +1038,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Cód Boticário</th>
+                            <th>Cód Oboticário</th>
                             <th>Descrição do Produto</th>
                             <th>Custo Fornecedor (R$)</th>
                         </tr>
@@ -1069,7 +1069,7 @@
                     <div class="pdf-header-custom">
                         <h2
                             style="margin: 0; color: #2eb8b8; font-size: 1.5rem; text-transform: uppercase; font-weight: 900;">
-                            O Boticário</h2>
+                            O Oboticário</h2>
                         <p style="margin: 5px 0 0 0; font-weight: bold; font-size: 1rem;">Recibo de Compra</p>
                     </div>
 
@@ -1179,7 +1179,7 @@
 
     <div id="modalPedidoMaster" class="modal">
         <div class="modal-content" style="max-width: 800px;">
-            <h2>Mestre de Criação: Caixa Boticário</h2>
+            <h2>Mestre de Criação: Caixa Oboticário</h2>
             <div
                 style="background: var(--surface); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px dashed var(--border);">
                 <label style="font-weight: 800; font-size: 0.85rem; color: var(--primary);">📥 ALOCAÇÃO RÁPIDA (LEITOR
@@ -1199,9 +1199,9 @@
                 <input type="text" id="m_cod_pedido" placeholder="Cód. da Caixa (Ex: 115668350)">
                 <input type="number" id="m_frete" step="0.01" placeholder="Valor Frete Rateio (R$)">
                 <div><label style="font-size:0.75rem;font-weight:bold;color:var(--text-muted);padding-left:10px;">Data
-                        Entrega Boticário</label><input type="date" id="m_data_entrega"></div>
+                        Entrega Oboticário</label><input type="date" id="m_data_entrega"></div>
                 <div><label style="font-size:0.75rem;font-weight:bold;color:var(--text-muted);padding-left:10px;">Venc.
-                        Boleto Boticário</label><input type="date" id="m_venc_boticario"></div>
+                        Boleto Oboticário</label><input type="date" id="m_venc_boticario"></div>
             </div>
             <hr style="border: 1px solid var(--border); margin: 20px 0; opacity: 0.3;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -1300,7 +1300,7 @@
                 <div><label style="font-size:0.8rem; font-weight:800; color:var(--text-muted);">Frete Rateio
                         (R$)</label><input type="number" id="det_frete_input" step="0.01" readonly></div>
                 <div><label style="font-size:0.8rem; font-weight:800; color:var(--text-muted);">Venc. 1ª Parc
-                        (Boticário)</label><input type="date" id="det_v1_input" readonly></div>
+                        (Oboticário)</label><input type="date" id="det_v1_input" readonly></div>
                 <div><label style="font-size:0.8rem; font-weight:800; color:var(--text-muted);">Venc. 2ª
                         Parc</label><input type="date" id="det_v2_input" readonly></div>
                 <div><label style="font-size:0.8rem; font-weight:800; color:var(--text-muted);">Venc. 3ª
@@ -1360,7 +1360,7 @@
     <div id="modalNovoProdutoBase" class="modal">
         <div class="modal-content">
             <h2>Novo Item no Catálogo Base</h2>
-            <input type="text" id="b_cod" placeholder="Código Boticário">
+            <input type="text" id="b_cod" placeholder="Código oticário">
             <input type="text" id="b_nome" placeholder="Descrição/Nome">
             <input type="number" id="b_custo" step="0.01" placeholder="Custo Base Fornecedor (R$)">
             <div style="display:flex; justify-content: flex-end; gap:10px;"><button class="btn-outline"
@@ -1730,6 +1730,10 @@
         async function carregarPedidosEngine() {
             const grid = document.getElementById('grid-pedidos'); grid.innerHTML = '';
             const data = await fetchGlobalData();
+            
+            // Ativa varredura de vencimentos em background
+            verificarNotificacoesBoticario(data.pSnap);
+
             let blocos = [];
 
             data.pSnap.forEach(d => {
@@ -1785,13 +1789,19 @@
                 let classBadge = b.targetParcStr === 'LIQUIDADA' ? 'badge-safe' : (b.status.atrasado ? 'badge-alert' : 'badge-warning');
                 let corStr = b.targetParcStr === 'LIQUIDADA' ? 'var(--success)' : (b.status.atrasado ? 'var(--danger)' : 'var(--warning)');
                 let textoDias = b.status.texto === 'CONCLUÍDO' ? 'Totalmente Pago' : b.status.texto.replace(' atrasados', ' atraso');
+                
+                // Leitura do Status Fornecedor
+                let corBot = b.pedido.pago_boticario ? 'var(--success)' : 'var(--danger)';
+                let txtBot = b.pedido.pago_boticario ? '<i class="fa-solid fa-check-double"></i> Fatura Paga' : '<i class="fa-solid fa-triangle-exclamation"></i> Oboticário Pendente';
 
                 grid.innerHTML += `
                     <div class="card-box interactive" onclick="abrirDetalhePedidoEngine('${b.cod}')">
                         <div class="card-header">
                             <div style="overflow: hidden;">
                                 <span class="card-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><i class="fa-solid fa-box-open" style="color:var(--primary-light);"></i> #${b.cod}</span>
-                                <div class="card-subtitle">Caixa Oboticário</div>
+                                <div class="card-subtitle">
+                                    <span style="color:${corBot}; font-weight:800; font-size: 0.75rem;">${txtBot}</span>
+                                </div>
                             </div>
                             <span class="badge ${classBadge}" style="white-space: nowrap;">${b.targetParcStr}</span>
                         </div>
@@ -1876,6 +1886,25 @@
             const elLucro = document.getElementById('det_lucro');
             elLucro.innerText = `R$ ${lucroLivre.toFixed(2)}`;
             elLucro.style.color = lucroLivre < 0 ? 'var(--danger)' : 'var(--success)';
+
+            // Injeção limpa do botão de Controle do Oboticário
+            let containerBtn = document.getElementById('sys_btn_boticario_wrapper');
+            if (!containerBtn) {
+                containerBtn = document.createElement('div');
+                containerBtn.id = 'sys_btn_boticario_wrapper';
+                const badgesEl = document.getElementById('det_badges_pagamento');
+                badgesEl.parentNode.insertBefore(containerBtn, badgesEl.nextSibling);
+            }
+
+            const isPagoBot = pedido.pago_boticario === true;
+            containerBtn.innerHTML = `
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Controle de Pagamento ao Fornecedor</span>
+                    <button onclick="alternarPagamentoBoticario('${codPedido}', ${isPagoBot})" style="width: 100%; padding: 14px; border-radius: 8px; border: 2px solid ${isPagoBot ? 'var(--success)' : 'var(--danger)'}; background: ${isPagoBot ? 'rgba(22, 163, 74, 0.1)' : 'transparent'}; color: ${isPagoBot ? 'var(--success)' : 'var(--danger)'}; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;">
+                        ${isPagoBot ? '<i class="fa-solid fa-check-double"></i> MARCAR COMO PENDENTE' : '<i class="fa-solid fa-square-check"></i> MARCAR Oboticário COMO PAGO'}
+                    </button>
+                </div>
+            `;
 
             abrirModal('modalDetalhePedido');
         };
@@ -2632,9 +2661,9 @@
                 const multa = 5.93;
                 const juros = diasAtraso * 0.89;
                 const valorAtualizado = valorBase + multa + juros;
-                texto = `Olá ${cliente}, tudo bem? 📦\n\nConsta em meu sistema que a sua ${parcela} parcela do Boticário encontra-se em atraso.\n\n*Resumo atualizado:*\nValor original: R$ ${valorBase.toFixed(2)}\nMulta + Juros (${diasAtraso} dias): R$ ${(multa + juros).toFixed(2)}\n*Total a pagar: R$ ${valorAtualizado.toFixed(2)}*\n\nVocê pode consultar os detalhes da sua conta e baixar seus recibos aqui:\n${linkCliente}\n\nPodemos regularizar isso hoje?`;
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nConsta em meu sistema que a sua ${parcela} parcela do Oboticário encontra-se em atraso.\n\n*Resumo atualizado:*\nValor original: R$ ${valorBase.toFixed(2)}\nMulta + Juros (${diasAtraso} dias): R$ ${(multa + juros).toFixed(2)}\n*Total a pagar: R$ ${valorAtualizado.toFixed(2)}*\n\nVocê pode consultar os detalhes da sua conta e baixar seus recibos aqui:\n${linkCliente}\n\nPodemos regularizar isso hoje?`;
             } else {
-                texto = `Olá ${cliente}, tudo bem? 📦\n\nPassando para lembrar que a sua ${parcela} parcela do Boticário no valor de *R$ ${valorBase.toFixed(2)}* vence em breve.\n\nConfira os detalhes e seus comprovantes no link abaixo:\n${linkCliente}`;
+                texto = `Olá ${cliente}, tudo bem? 📦\n\nPassando para lembrar que a sua ${parcela} parcela do Oboticário no valor de *R$ ${valorBase.toFixed(2)}* vence em breve.\n\nConfira os detalhes e seus comprovantes no link abaixo:\n${linkCliente}`;
             }
 
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`, '_blank');
@@ -2650,6 +2679,61 @@
                 }).catch(err => console.error('Erro no SW', err));
             });
         }
+
+        // --- CONTROLE DE CAIXA (FORNECEDOR) E NOTIFICAÇÕES ---
+        window.alternarPagamentoBoticario = async (codPedido, isPagoAtualmente) => {
+            try {
+                await updateDoc(doc(db, "pedidos_marca", codPedido), { pago_boticario: !isPagoAtualmente });
+                abrirDetalhePedidoEngine(codPedido); 
+                carregarPedidosEngine(); 
+                if (document.getElementById('page-dashboard').classList.contains('active')) carregarDashboardEngine();
+            } catch (e) {
+                console.error(e);
+                alert("Falha de rede ao sincronizar com o Firebase.");
+            }
+        };
+
+        window.verificarNotificacoesBoticario = (pedidosSnap) => {
+            if (!("Notification" in window)) return;
+            
+            // Solicita permissão do celular silenciosamente no primeiro acesso
+            if (Notification.permission === "default") Notification.requestPermission();
+            if (Notification.permission !== "granted") return;
+
+            const hojeStr = new Date().toISOString().split('T')[0];
+            let notifs = JSON.parse(localStorage.getItem('sys_notifs_bot') || '{}');
+
+            pedidosSnap.forEach(d => {
+                const p = d.data();
+                if (p.pago_boticario) return; // Se a fatura foi paga, cessa os alertas
+
+                const v1 = p.vencimento_1;
+                const v2 = p.vencimento_2 || adicionarMeses(v1, 1);
+                const v3 = p.vencimento_3 || adicionarMeses(v1, 2);
+
+                [v1, v2, v3].forEach((venc, idx) => {
+                    if (!venc) return;
+                    const status = calcularDias(venc);
+                    
+                    // Gatilhos de disparo: Exatos 5 dias restantes OU Atraso
+                    if (status.dias === 5 || status.dias < 0) {
+                        const chaveStorage = `${d.id}_p${idx+1}_${hojeStr}`;
+                        
+                        if (!notifs[chaveStorage]) {
+                            const urgencia = status.dias < 0 ? "ATRASADA" : "VENCE EM 5 DIAS";
+                            new Notification(`Gestão O Oboticário - Caixa #${d.id}`, {
+                                body: `Atenção: A ${idx+1}ª parcela do fornecedor está ${urgencia}. Data: ${formatarDataBR(venc)}.`,
+                                icon: "https://cdn-icons-png.flaticon.com/512/5696/5696169.png"
+                            });
+                            notifs[chaveStorage] = true;
+                        }
+                    }
+                });
+            });
+
+            // Evita spam salvando o log diário no cache local
+            localStorage.setItem('sys_notifs_bot', JSON.stringify(notifs));
+        };
     </script>
 
 </html>
