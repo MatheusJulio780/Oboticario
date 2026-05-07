@@ -5,11 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Minha Conta | O Boticário</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
@@ -149,93 +146,6 @@
             justify-content: center;
             font-weight: 800;
         }
-
-        /* =========================================================
-           ESTILOS DO PDF (Oculto na tela principal)
-        ========================================================= */
-        #pdf-render {
-            display: none;
-        }
-
-        #pdf-wrapper {
-            background: #ffffff;
-            color: #111111;
-            padding: 25px;
-            margin: 0 auto;
-            font-family: 'Arial', sans-serif;
-            font-size: 0.85rem;
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
-        }
-
-        .pdf-header-custom {
-            text-align: center;
-            border-bottom: 2px dashed #ccc;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .pdf-info-grid {
-            display: flex;
-            justify-content: space-between;
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 0.8rem;
-        }
-
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 0.75rem;
-        }
-
-        .pdf-table th {
-            background: #eeeeee;
-            padding: 8px;
-            text-align: left;
-            border-bottom: 2px solid #dddddd;
-            color: #333;
-        }
-
-        .pdf-table td {
-            padding: 6px 8px;
-            border-bottom: 1px solid #eeeeee;
-            color: #222;
-        }
-
-        .pdf-footer-grid {
-            border-top: 2px solid #eeeeee;
-            padding-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .pdf-valor-ok {
-            color: #166534;
-            background: #dcfce7;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-
-        .pdf-valor-atrasado {
-            color: #991b1b;
-            background: #fee2e2;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid #fca5a5;
-        }
-
-        .pdf-valor-neutro {
-            color: #475569;
-            background: #f1f5f9;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
     </style>
 </head>
 
@@ -261,64 +171,6 @@
         <div id="lista-parcelas"></div>
     </div>
 
-    <div id="pdf-render">
-        <div id="pdf-wrapper">
-            <div class="pdf-header-custom">
-                <h2 style="margin: 0; color: #2eb8b8; font-size: 1.5rem; text-transform: uppercase; font-weight: 900;">O
-                    Boticário</h2>
-                <p style="margin: 5px 0 0 0; font-weight: bold; font-size: 1rem;">Recibo de Compra</p>
-            </div>
-            <div class="pdf-info-grid">
-                <div>
-                    <p style="margin: 0 0 4px 0;"><strong>Cliente:</strong> <span id="pdf_cliente"></span></p>
-                    <p style="margin: 0;"><strong>Caixa Ref:</strong> #<span id="pdf_cod_pedido"></span></p>
-                </div>
-                <div style="text-align: right;">
-                    <p style="margin: 0 0 4px 0;"><strong>Entrega:</strong> <span id="pdf_data_entrega"></span></p>
-                    <p style="margin: 0;"><strong>Itens:</strong> <span id="pdf_qtd"></span></p>
-                </div>
-            </div>
-            <table class="pdf-table">
-                <thead>
-                    <tr>
-                        <th>Cód</th>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Condição</th>
-                    </tr>
-                </thead>
-                <tbody id="pdf_tabela_itens"></tbody>
-            </table>
-            <div class="pdf-footer-grid">
-                <div style="width: 50%;">
-                    <div id="pdf_alerta_vencimento"
-                        style="padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; text-align: center; margin-bottom: 10px;">
-                    </div>
-
-                    <div
-                        style="padding: 8px 10px; background: #fff3cd; border-left: 4px solid #ffc107; font-size: 0.65rem; color: #856404; text-align: left; border-radius: 0 4px 4px 0;">
-                        <strong>ATENÇÃO:</strong> A partir da data de vencimento, incidirá multa de <strong>R$
-                            5,93</strong> e juros de <strong>R$ 0,89 ao dia</strong> a contar da data vcto.
-                    </div>
-                </div>
-
-                <div style="width: 45%; text-align: right;">
-                    <p style="margin: 0 0 8px 0; font-size: 1.1rem;">Total: <strong style="color: #2eb8b8;"
-                            id="pdf_total"></strong></p>
-                    <div
-                        style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #eeeeee; font-size: 0.75rem;">
-                        <div style="display:flex; justify-content: space-between; margin-bottom: 4px;"><span>1ª (<span
-                                    id="pdf_d1_min"></span>):</span> <strong id="pdf_p1"></strong></div>
-                        <div style="display:flex; justify-content: space-between; margin-bottom: 4px;"><span>2ª (<span
-                                    id="pdf_d2_min"></span>):</span> <strong id="pdf_p2"></strong></div>
-                        <div id="box_p3" style="display:flex; justify-content: space-between;"><span>3ª (<span
-                                    id="pdf_d3_min"></span>):</span> <strong id="pdf_p3"></strong></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -326,6 +178,18 @@
         const firebaseConfig = { apiKey: "AIzaSyCi03g667vB1uOT1zsuDc1AkiyQ1b8o0GQ", authDomain: "oboticario-e8369.firebaseapp.com", projectId: "oboticario-e8369" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // MOTOR DE AUTO-INJEÇÃO HTML2CANVAS
+        async function loadHtml2Canvas() {
+            if (window.html2canvas) return window.html2canvas;
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+                script.onload = () => resolve(window.html2canvas);
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
 
         // FUNÇÕES UTILITÁRIAS E DE CÁLCULO
         function adicionarMeses(dataISO, meses) {
@@ -411,8 +275,8 @@
                                 </div>
                                 <div style="text-align:right;">
                                     <div style="font-weight:800; font-size:1.1rem; margin-bottom: 6px;">R$ ${saldo.toFixed(2)}</div>
-                                    <button class="btn-pdf" onclick="window.gerarReciboCliente('${cod}', this)">
-                                        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+                                    <button class="btn-pdf" onclick="window.gerarReciboVisual('${cod}', this)">
+                                        <i class="fa-solid fa-image"></i> Ver Recibo
                                     </button>
                                 </div>
                             </div>
@@ -429,9 +293,9 @@
             document.getElementById('loading-overlay').style.display = 'none';
         }
 
-        window.gerarReciboCliente = async (codPedido, btnElement) => {
+        window.gerarReciboVisual = async (codPedido, btnElement) => {
             const originalText = btnElement.innerHTML;
-            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Visualização...';
+            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
             btnElement.disabled = true;
 
             try {
@@ -445,7 +309,7 @@
                 const vSnap = await getDocs(query(collection(db, "vendas_clientes"), where("cod_pedido", "==", codPedido), where("cliente", "==", cliente)));
                 const pgSnap = await getDocs(query(collection(db, "pagamentos_recebidos"), where("cod_pedido", "==", codPedido), where("cliente", "==", cliente)));
 
-                let totalVendaOriginal = 0, maxParcelas = 1, venc1 = '', htmlTable = '', qtd = 0;
+                let totalVendaOriginal = 0, maxParcelas = 1, venc1 = '', htmlItens = '', qtd = 0;
                 
                 vSnap.forEach(d => {
                     const v = d.data();
@@ -453,7 +317,19 @@
                     if (v.parcelas > maxParcelas) maxParcelas = v.parcelas; venc1 = v.venc_cliente;
                     const valCondicao = v.parcelas > 1 ? `R$ ${(val / v.parcelas).toFixed(2)}` : 'À Vista';
                     const strParcela = v.parcelas > 1 ? `${v.parcelas}X` : '1X';
-                    htmlTable += `<tr><td>${v.cod_produto}</td><td>${v.nome_item}</td><td><strong>R$ ${val.toFixed(2)}</strong></td><td>${strParcela} (${valCondicao})</td></tr>`;
+                    
+                    htmlItens += `
+                        <div style="display:flex; justify-content:space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                            <div style="flex:1;">
+                                <div style="font-size:12px; color:#64748b;">${v.cod_produto}</div>
+                                <div style="font-size:14px; color:#0f172a; font-weight:600;">${v.nome_item}</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:14px; color:#0f172a; font-weight:800;">R$ ${val.toFixed(2)}</div>
+                                <div style="font-size:12px; color:#64748b;">${strParcela} (${valCondicao})</div>
+                            </div>
+                        </div>
+                    `;
                 });
 
                 let pago_p1 = 0, pago_p2 = 0, pago_p3 = 0;
@@ -471,7 +347,9 @@
                 const venc2 = maxParcelas >= 2 ? adicionarMeses(venc1, 1) : null;
                 const venc3 = maxParcelas === 3 ? adicionarMeses(venc1, 2) : null;
 
-                const statusV1 = calcularDias(venc1); const statusV2 = calcularDias(venc2); const statusV3 = calcularDias(venc3);
+                const statusV1 = calcularDias(venc1);
+                const statusV2 = calcularDias(venc2);
+                const statusV3 = calcularDias(venc3);
 
                 const calcularEncargos = (valorBase, jaPago, status) => {
                     if (jaPago >= (valorBase - 0.1)) return { total: 0, juros: 0, multa: 0, devedor: 0 };
@@ -480,124 +358,132 @@
                     return { total: devOriginal + multa + juros, multa: multa, juros: juros, devedorOriginal: devOriginal };
                 };
 
-                const encP1 = calcularEncargos(valBaseP1, pago_p1, statusV1);
-                const encP2 = calcularEncargos(valBaseP2, pago_p2, statusV2);
-                const encP3 = calcularEncargos(valBaseP3, pago_p3, statusV3);
+                const encargosP1 = calcularEncargos(valBaseP1, pago_p1, statusV1);
+                const encargosP2 = calcularEncargos(valBaseP2, pago_p2, statusV2);
+                const encargosP3 = calcularEncargos(valBaseP3, pago_p3, statusV3);
 
-                let classP1 = 'pdf-valor-neutro', classP2 = 'pdf-valor-neutro', classP3 = 'pdf-valor-neutro';
-                if (pago_p1 >= (valBaseP1 - 0.1)) classP1 = 'pdf-valor-ok'; else if (statusV1.atrasado) classP1 = 'pdf-valor-atrasado';
-                if (maxParcelas >= 2) { if (pago_p2 >= (valBaseP2 - 0.1)) classP2 = 'pdf-valor-ok'; else if (statusV2.atrasado) classP2 = 'pdf-valor-atrasado'; }
-                if (maxParcelas === 3) { if (pago_p3 >= (valBaseP3 - 0.1)) classP3 = 'pdf-valor-ok'; else if (statusV3.atrasado) classP3 = 'pdf-valor-atrasado'; }
+                let colorP1 = '#64748b', colorP2 = '#64748b', colorP3 = '#64748b';
+                if (pago_p1 >= (valBaseP1 - 0.1)) colorP1 = '#16a34a'; else if (statusV1.atrasado) colorP1 = '#dc2626';
+                if (maxParcelas >= 2) { if (pago_p2 >= (valBaseP2 - 0.1)) colorP2 = '#16a34a'; else if (statusV2.atrasado) colorP2 = '#dc2626'; }
+                if (maxParcelas === 3) { if (pago_p3 >= (valBaseP3 - 0.1)) colorP3 = '#16a34a'; else if (statusV3.atrasado) colorP3 = '#dc2626'; }
 
-                const txtP1 = pago_p1 >= (valBaseP1 - 0.1) ? 'PAGO ✓' : `R$ ${encP1.total.toFixed(2)}`;
-                const txtP2 = maxParcelas >= 2 ? (pago_p2 >= (valBaseP2 - 0.1) ? 'PAGO ✓' : `R$ ${encP2.total.toFixed(2)}`) : '--';
-                const txtP3 = maxParcelas === 3 ? (pago_p3 >= (valBaseP3 - 0.1) ? 'PAGO ✓' : `R$ ${encP3.total.toFixed(2)}`) : '--';
+                const txtP1 = pago_p1 >= (valBaseP1 - 0.1) ? 'PAGO ✓' : `R$ ${encargosP1.total.toFixed(2)}`;
+                const txtP2 = maxParcelas >= 2 ? (pago_p2 >= (valBaseP2 - 0.1) ? 'PAGO ✓' : `R$ ${encargosP2.total.toFixed(2)}`) : '--';
+                const txtP3 = maxParcelas === 3 ? (pago_p3 >= (valBaseP3 - 0.1) ? 'PAGO ✓' : `R$ ${encargosP3.total.toFixed(2)}`) : '--';
 
-                let txtAlerta = '', classeAlerta = '';
+                let txtAlerta = '';
                 if (statusV1.atrasado && pago_p1 < valBaseP1) {
-                    txtAlerta = `⚠️ 1ª PARCELA ATRASADA: R$ ${encP1.devedorOriginal.toFixed(2)} + R$ ${encP1.multa} (Multa) + R$ ${encP1.juros.toFixed(2)} (Juros)`; classeAlerta = 'pdf-valor-atrasado';
+                    txtAlerta = `⚠️ 1ª PARCELA ATRASADA: R$ ${encargosP1.devedorOriginal.toFixed(2)} + R$ ${encargosP1.multa} (Multa) + R$ ${encargosP1.juros.toFixed(2)} (Juros)`; 
                 } else if (maxParcelas >= 2 && statusV2.atrasado && pago_p2 < valBaseP2) {
-                    txtAlerta = `⚠️ 2ª PARCELA ATRASADA: R$ ${encP2.devedorOriginal.toFixed(2)} + R$ ${encP2.multa} (Multa) + R$ ${encP2.juros.toFixed(2)} (Juros)`; classeAlerta = 'pdf-valor-atrasado';
+                    txtAlerta = `⚠️ 2ª PARCELA ATRASADA: R$ ${encargosP2.devedorOriginal.toFixed(2)} + R$ ${encargosP2.multa} (Multa) + R$ ${encargosP2.juros.toFixed(2)} (Juros)`; 
                 } else if (maxParcelas === 3 && statusV3.atrasado && pago_p3 < valBaseP3) {
-                    txtAlerta = `⚠️ 3ª PARCELA ATRASADA: R$ ${encP3.devedorOriginal.toFixed(2)} + R$ ${encP3.multa} (Multa) + R$ ${encP3.juros.toFixed(2)} (Juros)`; classeAlerta = 'pdf-valor-atrasado';
+                    txtAlerta = `⚠️ 3ª PARCELA ATRASADA: R$ ${encargosP3.devedorOriginal.toFixed(2)} + R$ ${encargosP3.multa} (Multa) + R$ ${encargosP3.juros.toFixed(2)} (Juros)`; 
                 } else {
                     if (maxParcelas === 1) txtAlerta = statusV1.texto;
                     else if (maxParcelas === 2) txtAlerta = pago_p1 >= valBaseP1 ? `${statusV2.texto} a 2ª parcela` : `${statusV1.texto} a 1ª parcela`;
                     else if (maxParcelas === 3) txtAlerta = pago_p1 >= valBaseP1 ? (pago_p2 >= valBaseP2 ? `${statusV3.texto} a 3ª parcela` : `${statusV2.texto} a 2ª parcela`) : `${statusV1.texto} a 1ª parcela`;
                 }
 
-                const setEl = (id, content, className) => { const el = document.getElementById(id); if (el) { el.innerHTML = content; if (className) el.className = className; } };
-
-                setEl('pdf_cod_pedido', codPedido); setEl('pdf_cliente', cliente); setEl('pdf_qtd', qtd); setEl('pdf_total', `R$ ${totalVendaOriginal.toFixed(2)}`);
-                setEl('pdf_p1', txtP1, classP1); setEl('pdf_p2', txtP2, classP2); setEl('pdf_p3', txtP3, classP3);
-                setEl('pdf_d1_min', venc1 ? formatarDataBR(venc1).substring(0, 5) : '--');
-                setEl('pdf_d2_min', (maxParcelas >= 2 && venc2) ? formatarDataBR(venc2).substring(0, 5) : '--');
-                setEl('pdf_d3_min', (maxParcelas === 3 && venc3) ? formatarDataBR(venc3).substring(0, 5) : '--');
-                setEl('pdf_alerta_vencimento', txtAlerta, classeAlerta);
-                setEl('pdf_data_entrega', (pedido && pedido.data_entrega) ? formatarDataBR(pedido.data_entrega) : '--');
-                setEl('pdf_tabela_itens', htmlTable);
-                document.getElementById('box_p3').style.display = maxParcelas === 3 ? 'flex' : 'none';
-
-                const wrapper = document.getElementById('pdf-wrapper');
-                const originalHTML = wrapper.innerHTML;
+                const dataEntregaFormatada = (pedido && pedido.data_entrega) ? formatarDataBR(pedido.data_entrega) : '--';
 
                 const fullHTML = `
-                    <div style="width: 800px; min-width: 800px; max-width: 800px; padding: 20px; background: #ffffff; color: #111111; font-family: Arial, sans-serif;">
-                        <style>
-                            * { box-sizing: border-box; font-family: Arial, sans-serif !important; }
-                            .pdf-header-custom { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
-                            .pdf-info-grid { display: table !important; width: 100% !important; background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
-                            .pdf-info-grid > div { display: table-cell !important; width: 50% !important; vertical-align: top; }
-                            .pdf-info-grid > div:last-child { text-align: right !important; }
-                            .pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 13px; table-layout: fixed; }
-                            .pdf-table th, .pdf-table td { padding: 8px 10px; border-bottom: 1px solid #eeeeee; word-wrap: break-word; }
-                            .pdf-table th { background: #eeeeee; text-align: left; border-bottom: 2px solid #dddddd; color:#333; font-weight: bold; }
-                            .pdf-footer-grid { display: table !important; width: 100% !important; border-top: 2px solid #eeeeee; padding-top: 15px; }
-                            .pdf-footer-grid > div { display: table-cell !important; vertical-align: top; }
-                            .pdf-footer-grid > div:first-child { width: 50% !important; }
-                            .pdf-footer-grid > div:last-child { width: 50% !important; text-align: right !important; }
-                            .pdf-footer-grid > div:last-child > div > div { display: table !important; width: 100% !important; margin-bottom: 6px; }
-                            .pdf-footer-grid > div:last-child > div > div > span { display: table-cell !important; text-align: left; }
-                            .pdf-footer-grid > div:last-child > div > div > strong { display: table-cell !important; text-align: right; }
-                            .pdf-valor-ok { color: #166534; background: #dcfce7; padding: 4px 8px; border-radius: 6px; }
-                            .pdf-valor-atrasado { color: #991b1b; background: #fee2e2; padding: 4px 8px; border-radius: 6px; border: 1px solid #fca5a5; }
-                            .pdf-valor-neutro { color: #475569; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; }
-                        </style>
-                        ${originalHTML}
+                    <div id="receipt-capture-area" style="width: 500px; padding: 40px; background: #ffffff; color: #1e293b; font-family: 'Arial', sans-serif; position: relative; border-top: 8px solid #07c2b2;">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <h1 style="margin: 0; font-size: 26px; color: #0f172a; font-weight: 800; letter-spacing: -1px;">O BOTICÁRIO</h1>
+                            <span style="font-size: 13px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">Comprovante de Compra</span>
+                        </div>
+                        
+                        <div style="background: #f8fafc; border-radius: 16px; padding: 20px; margin-bottom: 25px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 12px;">
+                                <span style="color: #64748b; font-size:14px;">Cliente</span>
+                                <strong style="color: #0f172a; font-size: 16px;">${cliente}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 12px;">
+                                <span style="color: #64748b; font-size:14px;">Caixa Referência</span>
+                                <strong style="color: #0f172a; font-size:14px;">#${codPedido}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #64748b; font-size:14px;">Previsão de Entrega</span>
+                                <strong style="color: #0f172a; font-size:14px;">${dataEntregaFormatada}</strong>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="font-size: 14px; color: #64748b; text-transform: uppercase; margin-bottom: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">Itens do Pedido (${qtd})</h3>
+                            ${htmlItens}
+                        </div>
+
+                        <div style="background: #f1f5f9; padding: 20px; border-radius: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+                                <span style="font-size: 16px; color: #0f172a; font-weight: bold;">TOTAL DA COMPRA</span>
+                                <strong style="font-size: 22px; color: #07c2b2;">R$ ${totalVendaOriginal.toFixed(2)}</strong>
+                            </div>
+                            
+                            <div style="background: #ffffff; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="font-size:13px; color:#64748b;">1ª Parc (${venc1 ? formatarDataBR(venc1).substring(0, 5) : '--'}):</span>
+                                    <strong style="font-size:14px; color:${colorP1};">${txtP1}</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: ${maxParcelas === 3 ? '8px' : '0'};">
+                                    <span style="font-size:13px; color:#64748b;">2ª Parc (${(maxParcelas >= 2 && venc2) ? formatarDataBR(venc2).substring(0, 5) : '--'}):</span>
+                                    <strong style="font-size:14px; color:${colorP2};">${txtP2}</strong>
+                                </div>
+                                ${maxParcelas === 3 ? `
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size:13px; color:#64748b;">3ª Parc (${(maxParcelas === 3 && venc3) ? formatarDataBR(venc3).substring(0, 5) : '--'}):</span>
+                                    <strong style="font-size:14px; color:${colorP3};">${txtP3}</strong>
+                                </div>` : ''}
+                            </div>
+
+                            <div style="text-align: center; color: ${txtAlerta.includes('⚠️') ? '#dc2626' : '#64748b'}; font-size: 13px; font-weight: bold; margin-bottom: 15px;">
+                                ${txtAlerta}
+                            </div>
+
+                            <div style="text-align: center; font-size: 10px; color: #94a3b8; line-height: 1.4;">
+                                ATENÇÃO: A partir da data de vencimento, incidirá multa de R$ 5,93 e juros de R$ 0,89 ao dia a contar da data vcto.
+                            </div>
+                        </div>
                     </div>
                 `;
 
-                const opt = { 
-                    margin: 0.2, 
-                    filename: `Recibo_${cliente.replace(/ /g, "_")}_Caixa_${codPedido}.pdf`, 
-                    image: { type: 'jpeg', quality: 1 }, 
-                    html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, 
-                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
-                };
-
-                // Aciona a abertura do Modal na tela do Cliente
-                if (typeof window.abrirModalPreviewPDF === 'function') {
-                    window.abrirModalPreviewPDF(fullHTML, opt, cliente);
-                } else {
-                    alert("A função de visualização não foi encontrada no código da página.");
-                }
+                abrirModalPreviewImagem(fullHTML, cliente);
 
             } catch (err) {
                 console.error("Erro crítico:", err);
-                alert("Falha na formatação. Verifique a internet.");
+                alert("Falha na formatação visual. Verifique a conexão.");
             } finally {
                 btnElement.innerHTML = originalText;
                 btnElement.disabled = false;
             }
         };
 
-        window.abrirModalPreviewPDF = (fullHTML, optConfig, clienteNome) => {
-            let modal = document.getElementById('sys-pdf-preview-modal');
+        window.abrirModalPreviewImagem = (fullHTML, clienteNome) => {
+            let modal = document.getElementById('sys-img-preview-modal');
             if (!modal) {
                 modal = document.createElement('div');
-                modal.id = 'sys-pdf-preview-modal';
+                modal.id = 'sys-img-preview-modal';
                 modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:15px; backdrop-filter: blur(4px);';
                 document.body.appendChild(modal);
             }
 
             modal.innerHTML = `
-                <div style="background:#fff; width:100%; max-width:600px; border-radius:12px; display:flex; flex-direction:column; height:85vh; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+                <div style="background:#fff; width:100%; max-width:550px; border-radius:12px; display:flex; flex-direction:column; height:85vh; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
                     <div style="padding:15px 20px; background:#f8f9fa; border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; font-size:1.1rem; color:#333;"><i class="fa-solid fa-file-pdf" style="color:#d32f2f;"></i> Visualização do Recibo</h3>
-                        <button onclick="document.getElementById('sys-pdf-preview-modal').style.display='none'" style="background:none; border:none; font-size:1.5rem; color:#666; cursor:pointer;">&times;</button>
+                        <h3 style="margin:0; font-size:1.1rem; color:#333;"><i class="fa-solid fa-image" style="color:#07c2b2;"></i> Recibo Visual</h3>
+                        <button onclick="document.getElementById('sys-img-preview-modal').style.display='none'" style="background:none; border:none; font-size:1.5rem; color:#666; cursor:pointer;">&times;</button>
                     </div>
                     
-                    <div id="sys-pdf-scroll-area" style="flex:1; overflow-y:auto; background:#cbd5e1; padding:20px; display:flex; justify-content:center; align-items:flex-start;">
-                        <div id="sys-pdf-scale-wrapper" style="transform-origin: top center; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+                    <div id="sys-img-scroll-area" style="flex:1; overflow-y:auto; background:#cbd5e1; display:flex; justify-content:center; align-items:flex-start;">
+                        <div id="wrapper-capture-box" style="transform-origin: top center;">
                             ${fullHTML}
                         </div>
                     </div>
 
                     <div style="padding:15px; border-top:1px solid #ddd; display:flex; gap:10px; justify-content:space-between; background:#fff;">
-                        <button id="btn-pdf-baixar" style="flex:1; padding:12px; background:#0f172a; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
-                            <i class="fa-solid fa-download"></i> Baixar PDF
+                        <button id="btn-img-baixar" style="flex:1; padding:12px; background:#0f172a; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <i class="fa-solid fa-download"></i> Salvar Imagem
                         </button>
-                        <button id="btn-pdf-compartilhar" style="flex:1; padding:12px; background:#25D366; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <button id="btn-img-compartilhar" style="flex:1; padding:12px; background:#25D366; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
                             <i class="fa-brands fa-whatsapp"></i> Compartilhar
                         </button>
                     </div>
@@ -607,50 +493,53 @@
             modal.style.display = 'flex';
 
             setTimeout(() => {
-                const scrollArea = document.getElementById('sys-pdf-scroll-area');
-                const wrapper = document.getElementById('sys-pdf-scale-wrapper');
-                const availableWidth = scrollArea.clientWidth - 40; 
-                const scale = availableWidth / 800;
-                
+                const scrollArea = document.getElementById('sys-img-scroll-area');
+                const wrapper = document.getElementById('wrapper-capture-box');
+                const scale = scrollArea.clientWidth / 500;
                 if(scale < 1) {
                     wrapper.style.transform = `scale(${scale})`;
                     wrapper.style.marginBottom = `-${wrapper.scrollHeight * (1 - scale)}px`;
-                } else {
-                    wrapper.style.transform = 'scale(1)';
-                    wrapper.style.marginBottom = '0px';
                 }
             }, 50);
 
-            const processarPDF = async (acao, btnElement) => {
+            const dispararExportacaoImagem = async (acao, btnElement) => {
                 const originalHTML = btnElement.innerHTML;
                 btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
                 btnElement.disabled = true;
 
                 try {
-                    const worker = html2pdf().set(optConfig).from(fullHTML);
+                    const html2canvasLib = await loadHtml2Canvas();
+                    const captureArea = document.getElementById('receipt-capture-area');
+                    
+                    const canvas = await html2canvasLib(captureArea, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+                    const dataURL = canvas.toDataURL("image/png");
+
                     if (acao === 'share') {
-                        const pdfBlob = await worker.outputPdf('blob');
-                        const file = new File([pdfBlob], optConfig.filename, { type: 'application/pdf' });
-                        if (navigator.share) {
-                            await navigator.share({ title: `Recibo - ${clienteNome}`, files: [file] });
-                        } else {
-                            alert("Seu navegador recusa o compartilhamento direto. Use a opção de Baixar.");
-                        }
+                        canvas.toBlob(async (blob) => {
+                            const file = new File([blob], `Recibo_${clienteNome.replace(/ /g, "_")}.png`, { type: 'image/png' });
+                            if (navigator.share) {
+                                await navigator.share({ title: `Recibo - ${clienteNome}`, files: [file] });
+                            } else {
+                                alert("Seu navegador não suporta compartilhamento direto. Baixe a imagem e envie manualmente.");
+                            }
+                        }, 'image/png');
                     } else {
-                        await worker.save();
+                        const link = document.createElement("a");
+                        link.download = `Recibo_${clienteNome.replace(/ /g, "_")}.png`;
+                        link.href = dataURL;
+                        link.click();
                     }
                 } catch (err) {
-                    console.error("Erro no processo do PDF:", err);
-                    alert("Falha de conversão. Sua conexão ou memória pode ter travado.");
+                    console.error("Erro na renderização da imagem:", err);
+                    alert("Falha ao desenhar a imagem. A sua conexão pode ter travado.");
                 } finally {
-                    document.querySelectorAll('.html2pdf__container').forEach(el => el.remove());
                     btnElement.innerHTML = originalHTML;
                     btnElement.disabled = false;
                 }
             };
 
-            document.getElementById('btn-pdf-baixar').onclick = function() { processarPDF('download', this); };
-            document.getElementById('btn-pdf-compartilhar').onclick = function() { processarPDF('share', this); };
+            document.getElementById('btn-img-baixar').onclick = function() { dispararExportacaoImagem('download', this); };
+            document.getElementById('btn-img-compartilhar').onclick = function() { dispararExportacaoImagem('share', this); };
         };
 
         carregarDadosCliente();
