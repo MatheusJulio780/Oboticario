@@ -29,7 +29,7 @@
            CORE SYSTEM: MODERN FLAT DESIGN & UI/UX
            ========================================= */
         :root, :root[data-theme="light"] {
-            --bg: #f8fafc;           /* Slate 50 - Fundo principal da página */
+            --bg: rgba(0, 165, 143, 0.075);           /* Slate 50 - Fundo principal da página */
             --surface: #ffffff;      /* Fundo de elementos e inputs */
             --bg-card: #ffffff;      /* Fundo de painéis e modais */
             --text-main: #0f172a;    /* Slate 900 - Texto principal */
@@ -53,14 +53,14 @@
 
         [data-theme="dark"],
         body[data-theme="dark"] {
-            --bg: #070b14;           /* Slate 900 */
-            --surface: #111720;      /* Slate 800 */
-            --bg-card: #151d29;
+            --bg: #071411;           /* Slate 900 */
+            --surface: #11201f;      /* Slate 800 */
+            --bg-card: #152829;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #07c2b2;
             --primary-light: #2dd4bf;
-            --border: #334155;       /* Slate 700 */
+            --border: #335553;       /* Slate 700 */
             
             --shadow-sm: 5px 5px 5px 0 rgba(58, 57, 77, 0.445);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0, 0.4);
@@ -260,7 +260,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             width: 100%;
         }
 
@@ -278,8 +278,9 @@
             display: grid;
             gap: 25px;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            margin-bottom: 5px;
-            padding: 15px;
+            margin: 1px;
+            padding: 0px;
+            padding-left: 15px;
 
         }
 
@@ -294,10 +295,11 @@
 
         .dash-metric-box, .chart-block, .glass-panel, .card-box {
             background: var(--bg-card);
+            max-height: 330px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
             border-radius: 20px;
-            padding: 30px;
+            padding: 15px;
             overflow: visible !important;
             transition: var(--transition);
         }
@@ -308,7 +310,7 @@
             border-color: rgba(7, 194, 178, 0.3);
         }
 
-        .chart-block { min-height: 420px; display: flex; flex-direction: column; padding: 25px; }
+        .chart-block { min-height: 1px; display: flex; flex-direction: column; padding: 25px; }
         .chart-block h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; color: var(--text-main); }
         .chart-block canvas { flex-grow: 1; max-height: 320px !important; }
 
@@ -408,7 +410,7 @@
             background: var(--bg-card) !important;
             border: 1px solid var(--border) !important;
             border-radius: 16px !important;
-            padding: 15px 20px !important;
+            padding: 1px 20px !important;
             margin-bottom: 12px !important;
             display: flex;
             justify-content: space-between;
@@ -1246,7 +1248,7 @@
         const diffDays = Math.ceil((alvo - hoje) / (1000 * 60 * 60 * 24));
         if (diffDays < 0) return { texto: `${Math.abs(diffDays)} d atrasados`, atrasado: true, dias: diffDays };
         if (diffDays === 0) return { texto: `Vence HOJE`, atrasado: false, dias: 0 };
-        return { texto: `Vence em ${diffDays} d`, atrasado: false, dias: diffDays };
+        return { texto: `Vence em ${diffDays} dias`, atrasado: false, dias: diffDays };
     }
 
     async function fetchGlobalData() {
